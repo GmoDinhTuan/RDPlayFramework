@@ -1,0 +1,108 @@
+.content-chat {
+	width: 100%;
+	min-height: 500px;
+	border: 1px solid #c4c4c4;
+}
+
+.list-member {
+	width: 20%;
+	min-height: 500px;
+	border-right: 1px solid #c4c4c4;
+	float: left;
+}
+
+.onChat {
+	width: 60%;
+	min-height: 500px;
+	float: left;
+}
+
+.box-chat {
+	width: 100%;
+	min-height: 400px;
+}
+
+.new-message {
+	width: 100%;
+	min-height: 100px;
+}
+
+.input_msg_write input {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: medium none;
+  color: #4c4c4c;
+  font-size: 15px;
+  min-height: 75px;
+  width: 100%;
+}
+
+.msg_send_btn {
+  background: #05728f none repeat scroll 0 0;
+  border: medium none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  font-size: 17px;
+  height: 33px;
+  position: absolute;
+  right: 0;
+  top: 11px;
+  width: 33px;
+}
+
+.header-new-mesage {
+	width: 100%;
+	min-height: 19px;
+	border-top: 1px solid #c4c4c4;
+}
+
+.attachment {
+	width: 50px;
+	min-height: 19px;
+	float: left;
+}
+
+.img-attch {
+	width: 16px;
+	min-height: 16px;
+	margin-left: 14px;
+}
+
+.img-voice {
+	width: 16px;
+	min-height: 16px;
+	margin-left: 14px;
+}
+.call {
+	width: 50px;
+	min-height: 19px;
+	float: left;
+}
+
+.send {
+	width: 60px;
+	min-height: 19px;
+	float: right;
+}
+
+.img-send {
+	width: 60px;
+	min-height: 19px;
+}
+
+.message {
+	width: 100%;
+	min-height: 76px;
+}
+
+.list-room {
+	width: 20%;
+	min-height: 500px;
+	border-left: 1px solid #c4c4c4;
+	float: left;
+}
+
+.new-room {
+	width: 100px;
+	height: 30px;
+}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.inject.ImplementedBy;
 
+import entities.Groups;
 import entities.Member;
 import services.impl.ChatRoomServiceImpl;
 
@@ -32,5 +33,13 @@ public interface ChatRoomService {
      * @throws Exception the exception
      */
     List<Member> findUser(String keyWord) throws Exception;
+
+    /**
+     * Find all group.
+     *
+     * @return the list
+     * @throws Exception the exception
+     */
+    List<Groups> findAllGroup() throws Exception;
 
 }

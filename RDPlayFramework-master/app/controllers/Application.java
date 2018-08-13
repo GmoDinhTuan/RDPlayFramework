@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import bean.LoginFormBean;
 import common.CommonConsts;
+import entities.Groups;
 import entities.Member;
 import play.data.Form;
 import play.data.FormFactory;
@@ -68,4 +69,10 @@ public class Application extends Controller {
 		List<Member> userList = chatRoomService.findUser("");
 		return ok(/*views.html.chatRoom.render(userList)*/);
 	}
+
+    public Result index() throws Exception{
+        List<Member> userList = chatRoomService.findUser("");
+        List<Groups> groupList = chatRoomService.findAllGroup();
+        return ok(views.html.chatRoom.render(userList, groupList));
+    }
 }

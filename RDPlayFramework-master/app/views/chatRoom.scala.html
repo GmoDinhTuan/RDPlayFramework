@@ -1,5 +1,6 @@
 @import entities.Member
-@(classes: List[Member]) @main("hello") {
+@import entities.Groups
+@(classes: List[Member], group: List[Groups]) @main("hello") {
 <div class="content-chat">
     <div class="list-member">
         <div class="header-list-member">
@@ -10,6 +11,8 @@
             </div>
         </div>
         <ul id="members" class="all-members">
+            @for(groups<- group){
+            <a href="#"><li class="user">@groups.getGroupsname()</li></a> }
             @for(member<- classes){
             <a href="#"><li class="user">@member.getUsername()</li></a> }
         </ul>

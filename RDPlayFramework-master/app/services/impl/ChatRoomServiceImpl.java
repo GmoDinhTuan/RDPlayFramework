@@ -1,5 +1,7 @@
 package services.impl;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import entities.Member;
@@ -11,10 +13,10 @@ import services.ChatRoomService;
  * The Class ChatRoomServiceImpl.
  */
 public class ChatRoomServiceImpl implements ChatRoomService{
-	
+
 	/** The chat room reponsitory. */
 	private ChatRoomReponsitory chatRoomReponsitory;
-	
+
 	/**
 	 * Instantiates a new chat room service impl.
 	 *
@@ -36,4 +38,13 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 		}
 		return null;
 	}
+
+	   /* (non-Javadoc)
+     * @see services.ChatRoomService#findUser(java.lang.String, java.lang.String)
+     */
+    @Override
+    public List<Member> findUser(String keyWord) throws Exception {
+        List<Member> user = chatRoomReponsitory.findUser(keyWord);
+        return user;
+    }
 }

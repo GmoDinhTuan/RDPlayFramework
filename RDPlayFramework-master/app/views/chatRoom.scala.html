@@ -1,0 +1,54 @@
+@import entities.Member
+@(classes: List[Member]) @main("hello") {
+<div class="content-chat">
+    <div class="list-member">
+        <div class="header-list-member">
+            <div class="title">Toàn bộ cuộc trò chuyện</div>
+            <div class="add-room">
+                <a href="#"><img class="img-voice" alt=""
+                    src="@routes.Assets.versioned("images/add-room.png")">
+            </div>
+        </div>
+        <ul id="members" class="all-members">
+            @for(member<- classes){
+            <a href="#"><li class="user">@member.getUsername()</li></a> }
+        </ul>
+    </div>
+    <div class="content-right">
+        <div class="name-room-chat">JAVA_HCM</div>
+        <div class="content-room-chat">
+            <div class="onChat">
+                <div class="box-chat"></div>
+                <div class="new-message">
+                    <div class="header-new-mesage">
+                        <div class="attachment">
+                            <a href="#"><img class="img-attch" alt=""
+                                src="@routes.Assets.versioned("images/attach.png")"></a>
+                        </div>
+                        <div class="call">
+                            <a href="#"><img class="img-voice" alt=""
+                                src="@routes.Assets.versioned("images/Voice-512.png")"></a>
+                        </div>
+                        <div class="send">
+                            <a href="#"><button class="img-send">Send</button></a>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <div class="input_msg_write">
+                            <input type="text" class="write_msg" placeholder="Type a message" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="list-room">
+                <div class="title-list-room">Danh sách thành viên</div>
+                <div class="list-member-of-room">TuanLD, TuMV, VuDA</div>
+                <div class="description">
+                    <div class="title-description">Mô tả</div>
+                    <div class="content-description">Đây là group java</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

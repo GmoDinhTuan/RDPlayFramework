@@ -52,10 +52,10 @@ public class Member extends Model{
 
     /** The avatar. */
     private String avatar;
-    
+
     /** The Constant find. */
     public static final Finder<String, Member> find = new Finder<>(Member.class);
-    
+
     /**
      * Gets the id.
      *
@@ -172,5 +172,5 @@ public class Member extends Model{
 	public static Finder<String, Member> getFind() {
 		return find;
 	}
-	
+
 }

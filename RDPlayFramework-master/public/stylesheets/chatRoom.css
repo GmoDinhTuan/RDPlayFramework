@@ -1,30 +1,77 @@
 .content-chat {
-	width: 100%;
-	min-height: 500px;
-	border: 1px solid #c4c4c4;
+    width: 100%;
+    min-height: 550px;
+    border: 1px solid #c4c4c4;
 }
 
 .list-member {
-	width: 20%;
-	min-height: 500px;
-	border-right: 1px solid #c4c4c4;
-	float: left;
+    width: 20%;
+    min-height: 550px;
+    border-right: 1px solid #c4c4c4;
+    float: left;
+    background-color: #f0f0f0;
+}
+
+.list-member a {
+    color: #6b6b6b !important;
+}
+.header-list-member {
+    width: 100%;
+    min-height: 30px;
+    border-bottom: 1px solid #c4c4c4;
+}
+.title {
+    width: 75%;
+    padding: 5px 0px 0px 15px;
+    float: left;
+}
+.add-room {
+    width: 20%;
+    padding: 4px 0px 0px 15px;
+    float: left;
+}
+
+.all-members ul {
+    list-style: none;
+}
+
+.user {
+    height: 37px;
+    padding-top: 11px;
+    line-height: 18px;
+    list-style: none;
+}
+
+.content-right {
+    width: 80%;
+    min-height: 520px;
+    float: left;
+}
+.name-room-chat {
+    width: 100%;
+    min-height: 30px;
+    border: 1px solid #c4c4c4;
+    padding: 5px 0px 0px 15px;
+}
+.content-room-chat {
+    width: 100%;
+    min-height: 400px;
 }
 
 .onChat {
-	width: 60%;
-	min-height: 500px;
-	float: left;
+    width: 70%;
+    min-height: 500px;
+    float: left;
 }
 
 .box-chat {
-	width: 100%;
-	min-height: 400px;
+    width: 100%;
+    min-height: 400px;
 }
 
 .new-message {
-	width: 100%;
-	min-height: 100px;
+    width: 100%;
+    min-height: 100px;
 }
 
 .input_msg_write input {
@@ -51,58 +98,100 @@
 }
 
 .header-new-mesage {
-	width: 100%;
-	min-height: 19px;
-	border-top: 1px solid #c4c4c4;
+    width: 100%;
+    min-height: 19px;
+    border-top: 1px solid #c4c4c4;
 }
 
 .attachment {
-	width: 50px;
-	min-height: 19px;
-	float: left;
+    width: 50px;
+    min-height: 19px;
+    float: left;
 }
 
 .img-attch {
-	width: 16px;
-	min-height: 16px;
-	margin-left: 14px;
+    width: 16px;
+    min-height: 16px;
+    margin-left: 14px;
 }
 
 .img-voice {
-	width: 16px;
-	min-height: 16px;
-	margin-left: 14px;
+    width: 16px;
+    min-height: 16px;
+    margin-left: 14px;
 }
 .call {
-	width: 50px;
-	min-height: 19px;
-	float: left;
+    width: 50px;
+    min-height: 19px;
+    float: left;
 }
 
 .send {
-	width: 60px;
-	min-height: 19px;
-	float: right;
+    width: 60px;
+    min-height: 19px;
+    float: right;
 }
 
 .img-send {
-	width: 60px;
-	min-height: 19px;
+    width: 60px;
+    min-height: 19px;
+    background-color: #006a9c;
+    color: #fff;
+}
+
+.img-send:hover {
+    background-color: #00adff;
 }
 
 .message {
-	width: 100%;
-	min-height: 76px;
+    width: 100%;
+    min-height: 76px;
 }
 
 .list-room {
-	width: 20%;
-	min-height: 500px;
-	border-left: 1px solid #c4c4c4;
-	float: left;
+    width: 30%;
+    min-height: 400px;
+    border-left: 1px solid #c4c4c4;
+    float: left;
+}
+.title-list-room {
+    width: 100%;
+    min-height: 30px;
+    border-bottom: 1px solid #c4c4c4;
+    padding: 5px 0px 0px 15px;
+    background-color: #e6e6e6;
+}
+.list-member-of-room {
+    width: 100%;
+    min-height: 150px;
+    background-color: #f0f0f0f0;
+}
+
+.description {
+    width: 100%;
+    min-height: 200px;
+    background-color: #f0f0f0f0;
+    border-bottom: 1px solid #c4c4c4;
+}
+
+.title-description {
+    width: 100%;
+    min-height: 30px;
+    border-bottom: 1px solid #c4c4c4;
+    border-top: 1px solid #c4c4c4;
+    padding: 5px 0px 0px 15px;
+    background-color: #e6e6e6;
 }
 
 .new-room {
-	width: 100px;
-	height: 30px;
+    width: 100px;
+    height: 30px;
+}
+
+.navbar {
+    margin-bottom: 0px !important;
+}
+
+#myFooter {
+    margin-top: 0px !important;
 }

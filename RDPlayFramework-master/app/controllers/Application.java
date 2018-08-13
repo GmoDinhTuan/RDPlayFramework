@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import bean.LoginFormBean;
@@ -17,11 +19,11 @@ import services.ChatRoomService;
  * The Class Application.
  */
 public class Application extends Controller {
-	
-	
+
+
 	/** The chat room service. */
 	private ChatRoomService chatRoomService;
-	
+
 	/** The form factory. */
 	private FormFactory formFactory;
 
@@ -36,7 +38,7 @@ public class Application extends Controller {
 		this.chatRoomService = chatRoomService;
 		this.formFactory = formFactory;
 	}
-	
+
 	/**
 	 * Login.
 	 *
@@ -46,7 +48,7 @@ public class Application extends Controller {
 		session().clear();
 		return ok(views.html.login.render(formFactory.form(LoginFormBean.class).fill(new LoginFormBean())));
 	}
-    
+
 	/**
 	 * Authenticate.
 	 *
@@ -63,6 +65,7 @@ public class Application extends Controller {
 		session(CommonConsts.USERNAME, user.getUsername());
 		session(CommonConsts.PASSWORD, user.getPassword());
 		session(CommonConsts.ID);
-		return ok("Login thành công");
+		List<Member> userList = chatRoomService.findUser("");
+		return ok(/*views.html.chatRoom.render(userList)*/);
 	}
 }

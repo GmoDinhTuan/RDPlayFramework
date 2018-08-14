@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import io.ebean.Model;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Groups.
  */
@@ -28,6 +29,9 @@ public class Groups extends Model {
     @NotNull
     @Size(max = 1)
     private String status;
+
+    /** The description. */
+    private String description;
 
     /**
      * Gets the id.
@@ -83,4 +87,21 @@ public class Groups extends Model {
         this.status = status;
     }
 
+    /**
+     * Gets the description.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description.
+     *
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

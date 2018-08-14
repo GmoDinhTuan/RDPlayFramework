@@ -28,30 +28,33 @@ public class Member extends Model{
      * The username.
      */
     @NotNull
-    @Size(min = 2, max = 255)
+    @Size(min = 2, max = 20)
     private String username;
 
     /**
      * The password.
      */
     @NotNull
-    @Size(min = 2, max = 255)
+    @Size(min = 2, max = 20)
     private String password;
 
     /**
      * The status.
      */
-    @Size(min = 1, max = 1)
+    @Size(min = 1, max = 2)
     private String status;
 
 
     /** The role. */
     @NotEmpty
-    @Size(min = 2, max = 10)
+    @Size(min = 2, max = 20)
     private String role;
 
     /** The avatar. */
     private String avatar;
+
+    /** The description. */
+    private String description;
 
     /** The Constant find. */
     public static final Finder<String, Member> find = new Finder<>(Member.class);
@@ -165,6 +168,20 @@ public class Member extends Model{
 	}
 
 	/**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
 	 * Gets the find.
 	 *
 	 * @return the find

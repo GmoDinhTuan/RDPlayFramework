@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import entities.Groups;
 import entities.Member;
+import entities.MembersGroup;
 import repositories.ChatRoomReponsitory;
 import services.ChatRoomService;
 
@@ -44,14 +45,26 @@ public class ChatRoomServiceImpl implements ChatRoomService{
      * @see services.ChatRoomService#findUser(java.lang.String, java.lang.String)
      */
     @Override
-    public List<Member> findUser(String keyWord) throws Exception {
-        List<Member> user = chatRoomReponsitory.findUser(keyWord);
+    public List<Member> findUser() throws Exception {
+        List<Member> user = chatRoomReponsitory.findUser();
         return user;
     }
 
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#findAllGroup()
+     */
     @Override
     public List<Groups> findAllGroup() throws Exception {
         List<Groups> listGroups = chatRoomReponsitory.findAllGroup();
         return listGroups;
+    }
+
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#selectMemberGroup(java.lang.String)
+     */
+    @Override
+    public List<MembersGroup> selectMemberGroup(String id) throws Exception {
+        List<MembersGroup> listMemberGroups = chatRoomReponsitory.selectMemberGroup(id);
+        return listMemberGroups;
     }
 }

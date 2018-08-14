@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import common.CommonConsts;
 import entities.Groups;
 import entities.Member;
+import entities.MembersGroup;
 import io.ebean.Ebean;
 import io.ebean.RawSql;
 import io.ebean.RawSqlBuilder;
@@ -26,7 +27,7 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
      */
     @Override
     public Member findByName(String username, String password) throws Exception {
-        Member user = Member.find.query().where().like("username", username).findOne();
+        Member user = Member.find.query().where().like(CommonConsts.USERNAME, username).findOne();
         if (user != null && user.getPassword().equals(password)) {
             return user;
         }
@@ -39,31 +40,37 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
      * @see repositories.ChatRoomReponsitory#findUser(java.lang.String, java.lang.String)
      */
     @Override
-    public List<Member> findUser(String keyWord) throws Exception {
-        List<Member> list;
-        if (!keyWord.equals(CommonConsts.EMPTY)) {
-            list = Member.find.query().where().ilike("name", "%" + keyWord + "%").orderBy("id desc")
-                .setMaxRows(100).findPagedList().getList();
-        } else {
-            String sql = " Select mem.id, mem.username from member mem where mem.status='1'";
+    public List<Member> findUser() throws Exception {
+        String sql = " Select mem.id, mem.username, mem.status, mem.description from member mem where mem.status= " + CommonConsts.VALUE_STATUS_ONE;
 
-            RawSql rawSql = RawSqlBuilder.parse(sql).create();
+        RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
-            list = Ebean.find(Member.class).setRawSql(rawSql).findList();
-        }
+        List<Member> list = Ebean.find(Member.class).setRawSql(rawSql).findList();
         return list;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see repositories.ChatRoomReponsitory#findAllGroup()
      */
     @Override
     public List<Groups> findAllGroup() throws Exception {
-        String sql = " Select grp.groupsname from groups grp where grp.status='1'";
+        String sql = " Select grp.groupsname, grp.id, grp.status, grp.description from groups grp where grp.status= " + CommonConsts.VALUE_STATUS_ONE;
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
         List<Groups> listGroup = Ebean.find(Groups.class).setRawSql(rawSql).findList();
+        return listGroup;
+    }
+
+    @Override
+    public List<MembersGroup> selectMemberGroup(String id) throws Exception {
+        String sql = " Select mem.username from member mem join membersgroup memgroup on mem.id = memgroup.memberid where memgroup.status=" + CommonConsts.VALUE_STATUS_ONE +" and memgroup.groupid = :groupid";
+        RawSql rawSql = RawSqlBuilder.parse(sql).create();
+
+        List<MembersGroup> listGroup = Ebean.find(MembersGroup.class).setRawSql(rawSql)
+            .setParameter(CommonConsts.GROUP_ID, id).findList();
         return listGroup;
     }
 }

@@ -1,6 +1,7 @@
 @import entities.Member
 @import entities.Groups
-@(classes: List[Member], group: List[Groups]) @main("hello") {
+@import entities.MembersGroup
+@(classes: List[Member], group: List[Groups], memgroup: List[MembersGroup], des: String, nameGroup: String) @main("hello") {
 <div class="content-chat">
     <div class="list-member">
         <div class="header-list-member">
@@ -12,13 +13,13 @@
         </div>
         <ul id="members" class="all-members">
             @for(groups<- group){
-            <a href="#"><li class="user">@groups.getGroupsname()</li></a> }
+            <a href="@routes.Application.chat(groups.getId(), "group", groups.getGroupsname(), groups.getDescription())"><li class="user">@groups.getGroupsname()</li></a> }
             @for(member<- classes){
-            <a href="#"><li class="user">@member.getUsername()</li></a> }
+            <a href="@routes.Application.chat(member.getId(), "member", member.getUsername(), member.getDescription())"><li class="user">@member.getUsername()</li></a> }
         </ul>
     </div>
     <div class="content-right">
-        <div class="name-room-chat">JAVA_HCM</div>
+        <div class="name-room-chat">@nameGroup</div>
         <div class="content-room-chat">
             <div class="onChat">
                 <div class="box-chat"></div>
@@ -44,11 +45,16 @@
                 </div>
             </div>
             <div class="list-room">
-                <div class="title-list-room">Danh sách thành viên</div>
-                <div class="list-member-of-room">TuanLD, TuMV, VuDA</div>
+                <div id ="myDIV">
+                    <div class="title-list-room">Danh sách thành viên</div>
+                    <div class="list-member-of-room">
+                        @for(membersGroup<- memgroup){
+                        @membersGroup.getUsername()&emsp; }
+                    </div>
+                </div>
                 <div class="description">
-                    <div class="title-description">MÃ´ táº£</div>
-                    <div class="content-description">Ä�Ã¢y lÃ  group java</div>
+                    <div class="title-description">Mô tả</div>
+                    <div class="content-description">@des</div>
                 </div>
             </div>
         </div>

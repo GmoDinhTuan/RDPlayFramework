@@ -6,6 +6,7 @@ import com.google.inject.ImplementedBy;
 
 import entities.Groups;
 import entities.Member;
+import entities.MembersGroup;
 import services.impl.ChatRoomServiceImpl;
 
 // TODO: Auto-generated Javadoc
@@ -26,13 +27,12 @@ public interface ChatRoomService {
 	Member checkLogin(String username, String password) throws Exception;
 
 	   /**
-     * Find user.
-     *
-     * @param keyWord the key word
-     * @return the list
-     * @throws Exception the exception
-     */
-    List<Member> findUser(String keyWord) throws Exception;
+   	 * Find user.
+   	 *
+   	 * @return the list
+   	 * @throws Exception the exception
+   	 */
+    List<Member> findUser() throws Exception;
 
     /**
      * Find all group.
@@ -41,5 +41,14 @@ public interface ChatRoomService {
      * @throws Exception the exception
      */
     List<Groups> findAllGroup() throws Exception;
+
+    /**
+     * Select member group.
+     *
+     * @param id the id
+     * @return the list
+     * @throws Exception the exception
+     */
+    List<MembersGroup> selectMemberGroup(String id) throws Exception;
 
 }

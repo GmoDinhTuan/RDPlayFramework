@@ -27,7 +27,7 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
     @Override
     public Member findByName(String username, String password) throws Exception {
         Member user = Member.find.query().where().like("username", username).findOne();
-        if (user.getPassword().equals(password)) {
+        if (user != null && user.getPassword().equals(password)) {
             return user;
         }
         return null;
@@ -45,7 +45,7 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
             list = Member.find.query().where().ilike("name", "%" + keyWord + "%").orderBy("id desc")
                 .setMaxRows(100).findPagedList().getList();
         } else {
-            String sql = " Select mem.username from member mem where mem.status='1'";
+            String sql = " Select mem.id, mem.username from member mem where mem.status='1'";
 
             RawSql rawSql = RawSqlBuilder.parse(sql).create();
 

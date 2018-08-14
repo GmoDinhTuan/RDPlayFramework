@@ -325,3 +325,52 @@ img#blah {
 	height: 200px;
 	border-radius: 50%;
 }
+.Search1Form { margin-bottom:10px; }
+.Search1Form .Label1Style { width:80px; }
+.Search1Form .Label2Style { width:90px; padding-left:5px; }
+.Search1Form .Label3Style { width:50px; }
+.Search1Form .Label4Style { width:125px; text-align:left; padding-left:15px; }
+.Search1Form .Label5Style { width:200px; text-align:left; padding-left:15px; }
+.Search1Form .Label6Style { width:88px; padding-left:5px; }
+.Search1Form .Label7Style { width:120px; padding-left:5px; }
+.Search1Form .ValueStyle { padding:2px 0 5px; }
+.Search1Form .Value1Style { width:196px; font-weight:bold; }
+.Search1Form .Value2Style { width:400px; }
+.Search1Form .Value3Style { width:80px; font-weight:bold; }
+.Search1Form .InputArea1Style { margin:5px 0 5px 16px; height:60px; width:530px; padding:3px; font-size:1em; }
+.LabelPLStyle { padding-left:3px !important; margin-right:0px !important; width:15px; }
+.Search1Form .InputText2Style, .ImportExcel1Form .InputText2Style { width:135px; }
+.Search1Form .InputText1Style { width:90px; }
+.Search1Form .InputText3Style { width:385px; }
+.Search1Form .InputText4Style { width:183px; }
+.Search1Form .InputText5Style { width:162px; }
+.Search1Form .InputText6Style { width:141px; }
+.Search1Form .BtnSearchStyle { margin-left:10px; }
+.Search1Form .BoxSelect1 .MySelectBoxClass { width:100px; }
+.Search1Form .BoxSelect1 .CustomStyleSelectBoxInner { width:67px; }
+.GeneralForm .Title2Style { margin:0 0 10px 0; }
+.GeneralForm .Title2MTStyle { margin-top:10px; }
+.SidebarSection .Title2Style { color:#04528e; font-size:0.75em; text-transform:uppercase; padding:8px 0 6px 13px; background:url(../images/bg_title2.jpg) left top repeat-x; border-bottom:1px solid #d5e0e4; }
+.GeneralForm { padding:15px 0 15px; }
+.CTTT1Form, .Search1Form, .ImportExcel1Form { padding:0; }
+.GeneralForm .Dl3Style dt, .GeneralForm .Dl3Style dd { margin-bottom:15px; height:22px; }
+.GeneralForm .LabelStyle, .GeneralSSection .LabelStyle { padding:2px 0 0; text-align:right; color:#215ea2; margin:0 10px 0 0; display:block; }
+.GeneralSSection .Label2Style { padding-left:20px; }
+.GeneralSSection .ValueStyle { padding-top:2px; }
+.Report1Form .Dl3Style dt { width:16%; }
+.Report1Form .Dl3Style dd { width:33%; }
+.ReqiureStyle { color:#F00; }
+.GeneralForm .InputTextStyle, .GeneralSSection .InputTextStyle { border:1px solid #c4c4c4; padding:0 4px; height:20px; line-height:20px; margin-bottom:9px; }
+.Report1Form .InputText1Style { width:191px; }
+.Report1Form .InputText2Style { width:170px; }
+.Report1Form .InputText3Style { width:164px;}
+.Report1Form .InputText4Style { width:120px;}  
+.CalendarLink { margin:3px 0 0 6px; display:inline; }
+.GeneralForm .LabelTMStyle { margin-top:-6px; }
+.PopupContentMid { padding:10px; }
+.PopupContentMid2 { padding:0 0 10px 0; }
+.Clear { clear:both; padding:0 !important; }
+.DlgOverlay { background:url(../images/bg_overlay.png) left top repeat; position:fixed; left:0px; right:0px; top:0px; bottom:0px; z-index:100002;}
+.OverlayLoading { width:219px; height:57px; color:#22a2bb; font-size:1em; position:absolute; top:50%; left:50%; z-index:100003; }
+.OverlayInLoading { position:relative; top:-50%; left:-50%; background:url(../images/bg_loading.png) left top no-repeat; width:219px; height:43px; padding:14px 0 0; text-align:center; vertical-align:middle; }
+.OverlayLoading img { margin-right:20px; }

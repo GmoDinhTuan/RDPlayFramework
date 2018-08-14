@@ -6,7 +6,7 @@
         <div class="header-list-member">
             <div class="title">Toàn bộ cuộc trò chuyện</div>
             <div class="add-room">
-                <a href="#"><img class="img-voice" alt=""
+                <a href="#" id="addGroupBtn"><img class="img-voice" alt=""
                     src="@routes.Assets.versioned("images/add-room.png")">
             </div>
         </div>
@@ -47,11 +47,56 @@
                 <div class="title-list-room">Danh sách thành viên</div>
                 <div class="list-member-of-room">TuanLD, TuMV, VuDA</div>
                 <div class="description">
-                    <div class="title-description">Mô tả</div>
-                    <div class="content-description">Đây là group java</div>
+                    <div class="title-description">MÃ´ táº£</div>
+                    <div class="content-description">Ä�Ã¢y lÃ  group java</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div id="addGroupDiv" style="display: none;">
+	<div id="addGroup" class="easyui-dialog" title="" value-options="closed:true,modal:true">
+		<div class="PopupContentMid2">
+			<div class="GeneralForm Search1Form">
+				<label id="groupNameLabel" style="margin-left: 58px;" class="LabelStyle Label2Style">Tên nhóm</label>
+				<input autocomplete="off" id="groupName" maxlength="30"  type="text" class="InputTextStyle InputText4Style" placeholder="Tên nhóm"/>
+				<div class="Clear"></div>
+				<h4  id="lstDep">Danh sách thành viên</h4>
+				<div class="Clear"></div>
+				@for(member<- classes){
+            <input type="checkbox" id="@member.getId()" onclick="return Member.chooseMember(this);" value="@member.getId()"/>@member.getUsername()<br></br>}
+				<p id="errMsgDialog" class="ErrorMsgStyle" style="display: none;"></p>
+				<p style="display: none; margin-left: 10px" class="SuccessMsgStyle" id="resultInsertShop"></p>
+			</div>
+			<div class="GeneralForm Search1Form"  style="text-align:center">
+				<button onclick="return Member.addGroup();" id="btnAddGroup">
+					<span class="Sprite2">Chọn</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(function() {  
+	Member.lstMember = new Member.Map();
+	$('#addGroupBtn').click(function(){
+		console.log("def");
+		$('#addGroup').dialog({
+			title: "Tạo group chat",  
+		    closed: false,  
+		    cache: false,  
+		    modal: true,
+		    width : 700,
+		    height :'auto',
+		    onOpen : function(){
+		    },
+		    onClose : function(){
+		    }
+		});
+	});
+	console.log("ac0");
+});
+
+
+</script>
 }

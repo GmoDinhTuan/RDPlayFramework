@@ -1,7 +1,7 @@
 @import entities.Member
 @import entities.Groups
 @import entities.MembersGroup
-@(classes: List[Member], group: List[Groups], memgroup: List[MembersGroup], des: String, nameGroup: String) @main("hello") {
+@(classes: List[Member], group: List[Groups], memgroup: List[MembersGroup], des: String, nameGroup: String, url: String, name: String) @main("hello") {
 <div class="content-chat">
     <div class="list-member">
         <div class="header-list-member">
@@ -22,7 +22,14 @@
         <div class="name-room-chat">@nameGroup</div>
         <div class="content-room-chat">
             <div class="onChat">
-                <div class="box-chat"></div>
+                <div class="box-chat">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul id="messages" class="list-unstyled">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 <div class="new-message">
                     <div class="header-new-mesage">
                         <div class="attachment">
@@ -34,12 +41,12 @@
                                 src="@routes.Assets.versioned("images/Voice-512.png")"></a>
                         </div>
                         <div class="send">
-                            <a href="#"><button class="img-send">Send</button></a>
+                            <button class="img-send" id="send" type="submit">Send</button>
                         </div>
                     </div>
                     <div class="message">
                         <div class="input_msg_write">
-                            <input type="text" class="write_msg" placeholder="Type a message" />
+                            <input id="message" type="text" class="write_msg" placeholder="Type a message" />
                         </div>
                     </div>
                 </div>
@@ -57,54 +64,53 @@
             </div>
         </div>
     </div>
-    
+
     <div id="addGroupDiv" style="display: none;">
-	<div id="addGroup" class="easyui-dialog" title="" value-options="closed:true,modal:true">
-		<div class="PopupContentMid2">
-			<div class="GeneralForm Search1Form">
-				<label id="groupNameLabel" style="margin-left: 58px;" class="LabelStyle Label2Style">Tên nhóm</label>
-				<input autocomplete="off" id="groupName" maxlength="30"  type="text" class="InputTextStyle InputText4Style" placeholder="Tên nhóm"/>
-				<div class="Clear"></div>
-				<h4  id="lstDep">Danh sách thành viên</h4>
-				<div class="Clear"></div>
-				@for(member<- classes){
+    <div id="addGroup" class="easyui-dialog" title="" value-options="closed:true,modal:true">
+        <div class="PopupContentMid2">
+            <div class="GeneralForm Search1Form">
+                <label id="groupNameLabel" style="margin-left: 58px;" class="LabelStyle Label2Style">Tên nhóm</label>
+                <input autocomplete="off" id="groupName" maxlength="30"  type="text" class="InputTextStyle InputText4Style" placeholder="Tên nhóm"/>
+                <div class="Clear"></div>
+                <h4  id="lstDep">Danh sách thành viên</h4>
+                <div class="Clear"></div>
+                @for(member<- classes){
             <input type="checkbox" id="@member.getId()" onclick="return Member.chooseMember(this);" value="@member.getId()"/>@member.getUsername()<br></br>
             }
-				<p id="errMsgDialog" class="ErrorMsgStyle" style="display: none;"></p>
-				<p style="display: none; margin-left: 10px" class="SuccessMsgStyle" id="resultInsertShop"></p>
-			</div>
-			<div class="GeneralForm Search1Form"  style="text-align:center">
-				<button onclick="return Member.addGroup();" id="btnAddGroup">
-					<span class="Sprite2">Chọn</span>
-				</button>
-			</div>
-		</div>
-	</div>
+                <p id="errMsgDialog" class="ErrorMsgStyle" style="display: none;"></p>
+                <p style="display: none; margin-left: 10px" class="SuccessMsgStyle" id="resultInsertShop"></p>
+            </div>
+            <div class="GeneralForm Search1Form"  style="text-align:center">
+                <button onclick="return Member.addGroup();" id="btnAddGroup">
+                    <span class="Sprite2">Chọn</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
 
 <script type="text/javascript">
-$(function() {  
-	Member.lstMember = new Member.Map();
-	$('#addGroupBtn').click(function(){
-		console.log("def");
-		$('#addGroup').dialog({
-			title: "Tạo group chat",  
-		    closed: false,  
-		    cache: false,  
-		    modal: true,
-		    width : 700,
-		    height :'auto',
-		    onOpen : function(){
-		    },
-		    onClose : function(){
-		    }
-		});
-	});
-	$('#addGroup').dialog('close');
-	Member.searchMember();
+$(function() {
+    Member.lstMember = new Member.Map();
+    $('#addGroupBtn').click(function(){
+        console.log("def");
+        $('#addGroup').dialog({
+            title: "Tạo group chat",
+            closed: false,
+            cache: false,
+            modal: true,
+            width : 700,
+            height :'auto',
+            onOpen : function(){
+            },
+            onClose : function(){
+            }
+        });
+    });
+    $('#addGroup').dialog('close');
+    Member.searchMember();
 });
-
-
 </script>
+<script type="text/javascript" charset="utf-8" src="@routes.Application.chatRoomJs(name, url)"></script>
 }

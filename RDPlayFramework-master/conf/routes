@@ -3,16 +3,18 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET		/login								controllers.Application.login()
+GET     /login                              controllers.Application.login()
 +nocsrf
-POST	/login								controllers.Application.authenticate()
+POST    /login                              controllers.Application.authenticate()
 GET     /index                              controllers.Application.index()
 +nocsrf
 POST	/searchmember						controllers.Application.searchMember()
 +nocsrf
 GET     /chat/:id                           controllers.Application.chat(id: Long, type: String, name: String, description: String)
+GET     /chatRoom                           controllers.Application.chatRoom()
+GET     /assets/javascripts/chatroom.js     controllers.Application.chatRoomJs(name, url)
 
 +nocsrf
-POST	/addgroup								controllers.Application.addGroup()
+POST    /addgroup                           controllers.Application.addGroup()
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               		controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)

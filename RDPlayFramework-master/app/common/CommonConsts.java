@@ -30,5 +30,9 @@ public class CommonConsts {
 	/** The Constant GROUP_ID. */
 	public static final String GROUP_ID = "groupid";
 
+    /** The Constant VALUE_STATUS_ONE. */
     public static final String VALUE_STATUS_ONE = "1";
+
+    /** The Constant PARAM_GROUP. */
+    public static final String PARAM_GROUP = "group";
 }

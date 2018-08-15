@@ -8,15 +8,11 @@ GET     /login                              controllers.Application.login()
 POST    /login                              controllers.Application.authenticate()
 GET     /index                              controllers.Application.index()
 +nocsrf
-<<<<<<< Updated upstream
 POST	/searchmember						controllers.Application.searchMember()
 +nocsrf
-GET     /chat/:id                           controllers.Application.chat(id: Long, type: String, name: String, description: String)
-=======
 GET     /chat/:id                           controllers.Application.chat(id: String, type: String, name: String, description: String)
 GET     /chatRoom                           controllers.Application.chatRoom()
 GET     /assets/javascripts/chatroom.js     controllers.Application.chatRoomJs(name, url)
->>>>>>> Stashed changes
 
 +nocsrf
 POST    /addgroup                           controllers.Application.addGroup()

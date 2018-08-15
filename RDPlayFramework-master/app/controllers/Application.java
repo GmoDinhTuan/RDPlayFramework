@@ -106,10 +106,10 @@ public class Application extends Controller {
         session(CommonConsts.USERNAME, user.getUsername());
         session(CommonConsts.PASSWORD, user.getPassword());
         List<Member> userList = chatRoomService.findUser();
-        List<Groups> groupList = chatRoomService.findAllGroup();
+        List<Groups> groupList = chatRoomService.findAllUserGroup(user.getId());
         List<MembersGroup> memberGroup = new ArrayList<>();
-        return ok(views.html.chatRoom.render(userList, groupList, memberGroup, "",
-            session(CommonConsts.USERNAME)));
+        return ok(views.html.chatRoom.render(userList, new ArrayList<Member>(), groupList, memberGroup, "",
+            session(CommonConsts.USERNAME),null));
     }
 
     /**
@@ -126,16 +126,18 @@ public class Application extends Controller {
         List<Member> userList = chatRoomService.findUser();
         List<Groups> groupList = chatRoomService.findAllGroup();
         List<MembersGroup> memberGroup = new ArrayList<>();
+        List<Member> lstMemberInGroup = new ArrayList<Member>();
         if (type.equals("group")) {
-            memberGroup = chatRoomService.selectMemberGroup(id);
+        	lstMemberInGroup = chatRoomService.selectMemberGroup(id);
+        	return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name, id));
         }
-        return ok(views.html.chatRoom.render(userList, groupList, memberGroup, description, name));
+        return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name,null));
     }
     
     @BodyParser.Of(BodyParser.Json.class)
     public Result searchMember() throws Exception{
     	List<Member> userList = chatRoomService.findUser();
-        List<Groups> groupList = chatRoomService.findAllGroup();
+        List<Groups> groupList = chatRoomService.findAllUserGroup(user.getId());
         Map<String, List<?>> mapUserGroup = new HashMap<String, List<?>>();
         mapUserGroup.put("userList", userList);
         mapUserGroup.put("groupList", groupList);

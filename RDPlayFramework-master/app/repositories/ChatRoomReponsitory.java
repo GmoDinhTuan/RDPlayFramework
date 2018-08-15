@@ -42,6 +42,8 @@ public interface ChatRoomReponsitory {
      * @throws Exception the exception
      */
     List<Groups> findAllGroup() throws Exception;
+    
+    public List<Groups> findAllUserGroup(Long id) throws Exception;
 
     /**
      * Select member group.
@@ -50,7 +52,7 @@ public interface ChatRoomReponsitory {
      * @return the list
      * @throws Exception the exception
      */
-    List<MembersGroup> selectMemberGroup(Long id) throws Exception;
+    List<Member> selectMemberGroup(Long id) throws Exception;
     
     
     @Transactional(rollbackFor = Exception.class)

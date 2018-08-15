@@ -59,13 +59,19 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         List<Groups> listGroups = chatRoomReponsitory.findAllGroup();
         return listGroups;
     }
+    
+    @Override
+    public List<Groups> findAllUserGroup(Long id) throws Exception {
+        List<Groups> listGroups = chatRoomReponsitory.findAllUserGroup(id);
+        return listGroups;
+    }
 
     /* (non-Javadoc)
      * @see services.ChatRoomService#selectMemberGroup(java.lang.String)
      */
     @Override
-    public List<MembersGroup> selectMemberGroup(Long id) throws Exception {
-        List<MembersGroup> listMemberGroups = chatRoomReponsitory.selectMemberGroup(id);
+    public List<Member> selectMemberGroup(Long id) throws Exception {
+        List<Member> listMemberGroups = chatRoomReponsitory.selectMemberGroup(id);
         return listMemberGroups;
     }
     

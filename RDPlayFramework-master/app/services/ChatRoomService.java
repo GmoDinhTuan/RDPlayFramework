@@ -41,6 +41,8 @@ public interface ChatRoomService {
      * @throws Exception the exception
      */
     List<Groups> findAllGroup() throws Exception;
+    
+    public List<Groups> findAllUserGroup(Long id) throws Exception;
 
     /**
      * Select member group.
@@ -49,7 +51,7 @@ public interface ChatRoomService {
      * @return the list
      * @throws Exception the exception
      */
-    List<MembersGroup> selectMemberGroup(Long id) throws Exception;
+    List<Member> selectMemberGroup(Long id) throws Exception;
     
     public void createGroup(String groupName, List<Long> lstMemberId)throws Exception;
 

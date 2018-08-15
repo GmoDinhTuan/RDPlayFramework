@@ -57,21 +57,31 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
      */
     @Override
     public List<Groups> findAllGroup() throws Exception {
-        String sql = " Select grp.groupsname, grp.id, grp.status, grp.description from groups grp where grp.status= " + CommonConsts.VALUE_STATUS_ONE;
-
-        RawSql rawSql = RawSqlBuilder.parse(sql).create();
+    	StringBuilder sql = new StringBuilder();
+        sql.append(" Select grp.groupsname, grp.id, grp.status, grp.description from groups grp  where grp.status= " + CommonConsts.VALUE_STATUS_ONE);
+        RawSql rawSql = RawSqlBuilder.parse(sql.toString()).create();
 
         List<Groups> listGroup = Ebean.find(Groups.class).setRawSql(rawSql).findList();
         return listGroup;
     }
+    
+    @Override
+    public List<Groups> findAllUserGroup(Long id) throws Exception {
+    	StringBuilder sql = new StringBuilder();
+        sql.append("Select grp.groupsname, grp.id, grp.status, grp.description from groups grp, membersgroup mgr where grp.id = mgr.groupid and mgr.memberid = :id");
+        RawSql rawSql = RawSqlBuilder.parse(sql.toString()).create();
+
+        List<Groups> listGroup = Ebean.find(Groups.class).setRawSql(rawSql).setParameter("id", id).findList();
+        return listGroup;
+    }
 
     @Override
-    public List<MembersGroup> selectMemberGroup(Long id) throws Exception {
+    public List<Member> selectMemberGroup(Long id) throws Exception {
         String sql = " Select mem.username from member mem join membersgroup memgroup on mem.id = memgroup.memberid where memgroup.status=" 
     + CommonConsts.VALUE_STATUS_ONE +" and memgroup.groupid = :groupid";
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
-        List<MembersGroup> listGroup = Ebean.find(MembersGroup.class).setRawSql(rawSql)
+        List<Member> listGroup = Ebean.find(Member.class).setRawSql(rawSql)
             .setParameter(CommonConsts.GROUP_ID, id).findList();
         return listGroup;
     }

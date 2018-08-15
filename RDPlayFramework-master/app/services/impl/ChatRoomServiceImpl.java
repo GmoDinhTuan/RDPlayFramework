@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import entities.Groups;
 import entities.Member;
 import entities.MembersGroup;
+import io.ebean.annotation.Transactional;
 import repositories.ChatRoomReponsitory;
 import services.ChatRoomService;
 
@@ -63,8 +64,13 @@ public class ChatRoomServiceImpl implements ChatRoomService{
      * @see services.ChatRoomService#selectMemberGroup(java.lang.String)
      */
     @Override
-    public List<MembersGroup> selectMemberGroup(String id) throws Exception {
+    public List<MembersGroup> selectMemberGroup(Long id) throws Exception {
         List<MembersGroup> listMemberGroups = chatRoomReponsitory.selectMemberGroup(id);
         return listMemberGroups;
+    }
+    
+    @Override
+    public void createGroup(String groupName, List<Long> lstMemberId)throws Exception {
+    	chatRoomReponsitory.createGroup(groupName, lstMemberId);
     }
 }

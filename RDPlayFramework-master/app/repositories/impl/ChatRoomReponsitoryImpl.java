@@ -11,6 +11,7 @@ import entities.MembersGroup;
 import io.ebean.Ebean;
 import io.ebean.RawSql;
 import io.ebean.RawSqlBuilder;
+import io.ebean.annotation.Transactional;
 import repositories.ChatRoomReponsitory;
 
 // TODO: Auto-generated Javadoc
@@ -65,12 +66,33 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
     }
 
     @Override
-    public List<MembersGroup> selectMemberGroup(String id) throws Exception {
-        String sql = " Select mem.username from member mem join membersgroup memgroup on mem.id = memgroup.memberid where memgroup.status=" + CommonConsts.VALUE_STATUS_ONE +" and memgroup.groupid = :groupid";
+    public List<MembersGroup> selectMemberGroup(Long id) throws Exception {
+        String sql = " Select mem.username from member mem join membersgroup memgroup on mem.id = memgroup.memberid where memgroup.status=" 
+    + CommonConsts.VALUE_STATUS_ONE +" and memgroup.groupid = :groupid";
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
         List<MembersGroup> listGroup = Ebean.find(MembersGroup.class).setRawSql(rawSql)
             .setParameter(CommonConsts.GROUP_ID, id).findList();
         return listGroup;
+    }
+    
+    @Override
+	@Transactional(rollbackFor = Exception.class)
+    public void createGroup(String groupName, List<Long> lstMemberId) throws Exception{
+    	Groups group = new Groups();
+    	group.setGroupsname(groupName);
+    	group.setStatus("1");
+    	Ebean.save(group);
+    	int size = lstMemberId.size();
+    	for(int i=0;i<size;i++) {
+//    		Member member = lstMemberId.get(i);
+    		
+    		MembersGroup membersGroup = new MembersGroup();
+        	membersGroup.setGroupId(group.getId());
+        	membersGroup.setMemberId(lstMemberId.get(i));
+        	membersGroup.setStatus("1");
+        	Ebean.save(membersGroup);
+    	}
+    	
     }
 }

@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -17,12 +19,15 @@ import io.ebean.Model;
  * The Class User.
  */
 @Entity
+@SequenceGenerator(name = "SEQ_STORE", sequenceName = "MEMBER_SEQ", allocationSize = 1)
+@Table(name="MEMBER")
 public class Member extends Model{
 
     /** The id. */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public String id;
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_STORE")
+    public Long id;
 
     /**
      * The username.
@@ -64,7 +69,7 @@ public class Member extends Model{
      *
      * @return the id
      */
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -73,7 +78,7 @@ public class Member extends Model{
      *
      * @param id the new id
      */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -3,9 +3,12 @@ package controllers;
 import static play.libs.Json.toJson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -30,6 +33,7 @@ import entities.Member;
 import entities.MembersGroup;
 import play.data.Form;
 import play.data.FormFactory;
+import play.db.jpa.JPAApi;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -52,11 +56,14 @@ public class Application extends Controller {
 
 	
 	private Member user;
+	
+	private final JPAApi jpa;
 
     @Inject
-    public Application(ChatRoomService chatRoomService, FormFactory formFactory) {
+    public Application(ChatRoomService chatRoomService, FormFactory formFactory, JPAApi jpa) {
         this.chatRoomService = chatRoomService;
         this.formFactory = formFactory;
+        this.jpa = jpa;
     }
 
     /**
@@ -84,7 +91,7 @@ public class Application extends Controller {
 		}
 //		Session session = Http.Context.current().session();
 		
-		List<Member> userList = chatRoomService.findUser("");
+		List<Member> userList = chatRoomService.findUser();
 		return redirect(controllers.routes.Application.index());
 	}
 
@@ -95,7 +102,7 @@ public class Application extends Controller {
      * @throws Exception the exception
      */
     public Result index() throws Exception {
-        session(CommonConsts.ID, user.getId());
+        session(CommonConsts.ID, user.getId().toString());
         session(CommonConsts.USERNAME, user.getUsername());
         session(CommonConsts.PASSWORD, user.getPassword());
         List<Member> userList = chatRoomService.findUser();
@@ -115,7 +122,7 @@ public class Application extends Controller {
      * @return the result
      * @throws Exception the exception
      */
-    public Result chat(String id, String type, String name, String description) throws Exception {
+    public Result chat(Long id, String type, String name, String description) throws Exception {
         List<Member> userList = chatRoomService.findUser();
         List<Groups> groupList = chatRoomService.findAllGroup();
         List<MembersGroup> memberGroup = new ArrayList<>();
@@ -126,17 +133,52 @@ public class Application extends Controller {
     }
     
     @BodyParser.Of(BodyParser.Json.class)
-    public Result addGroup()
-    {
+    public Result searchMember() throws Exception{
+    	List<Member> userList = chatRoomService.findUser();
+        List<Groups> groupList = chatRoomService.findAllGroup();
+        Map<String, List<?>> mapUserGroup = new HashMap<String, List<?>>();
+        mapUserGroup.put("userList", userList);
+        mapUserGroup.put("groupList", groupList);
+        return ok(Json.toJson(mapUserGroup));
+    	
+    }
+    
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result addGroup(){
         JsonNode json = request().body()
                                  .asJson();
         String groupName = json.findPath("groupName").textValue();
-        List<Member> lstMember = new ArrayList<Member>();
+        List<Long> lstMemberId = new ArrayList<Long>();
+//        jpa.withTransaction(()->{
+//        	
+//        	
+//        });
         json.findPath("lstMember").forEach((JsonNode node) -> {
-        	Member member = new Member();
-        	member.setId(node.asText());
-        	lstMember.add(member);
+    		
+    		lstMemberId.add(node.asLong());
+//        	Member member = new Member();
+//        	member.setId(node.asLong());
+//        	Groups group = new Groups();
+//        	group.setGroupsname(groupName);
+//        	group.setStatus("1");
+//        	group.insert();
+//        	EntityManager em = jpa.em();
+//        	
+//        	MembersGroup membersGroup = new MembersGroup();
+//        	membersGroup.setGroupId(group.getId());
+//        	membersGroup.setMemberId(member.getId());
+//        	membersGroup.setStatus("1");
+//        	membersGroup.insert();
+    		
         });
+        try {
+        	chatRoomService.createGroup(groupName, lstMemberId);
+        }catch(Exception e) {
+        	e.printStackTrace();
+        }
+        
+        
+        
 //        Member person = Json.fromJson(json, Person.class);
 //        if(name == null) {
 //            return badRequest("Missing parameter [code]");
@@ -145,7 +187,7 @@ public class Application extends Controller {
 //        }
         
 ////        person.save();
-        return ok(Json.toJson(lstMember));
+        return ok(Json.toJson(lstMemberId));
     }
 
 	public Member getUser() {

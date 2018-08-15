@@ -1,6 +1,13 @@
 package entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import io.ebean.Model;
 
@@ -8,62 +15,69 @@ import io.ebean.Model;
  * The Class MembersGroup.
  */
 @Entity
+@SequenceGenerator(name = "SEQ_STORE", sequenceName = "MEMBERSGROUP_SEQ", allocationSize = 1)
+@Table(name="MEMBERSGROUP")
 public class MembersGroup extends Model {
 
     /** The id. */
-    public String id;
+	@Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_STORE")
+	@Column(name="ID")
+    public Long id;
 
+	@NotNull
     /** The group id. */
-    public String groupId;
+	@Column(name="GROUPID")
+    public Long groupId;
 
+	@NotNull
     /** The member id. */
-    public String memberId;
+	@Column(name="MEMBERID")
+    public Long memberId;
 
+	@NotNull
     /** The status. */
+	@Column(name="STATUS")
     public String status;
 
     /** The username. */
-    public String username;
+//    public String username;
+    
+    public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
     /**
      * @return the groupId
      */
-    public String getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 
-    /**
+
+	/**
      * @param groupId the groupId to set
      */
-    public void setGroupId(String groupId) {
+    public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 
     /**
      * @return the memberId
      */
-    public String getMemberId() {
+    public Long getMemberId() {
         return memberId;
     }
 
     /**
      * @param memberId the memberId to set
      */
-    public void setMemberId(String memberId) {
+    public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 
@@ -84,15 +98,15 @@ public class MembersGroup extends Model {
     /**
      * @return the username
      */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    /**
+//     * @param username the username to set
+//     */
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
 
 }

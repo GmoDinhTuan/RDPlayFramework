@@ -49,6 +49,8 @@ public interface ChatRoomService {
      * @return the list
      * @throws Exception the exception
      */
-    List<MembersGroup> selectMemberGroup(String id) throws Exception;
+    List<MembersGroup> selectMemberGroup(Long id) throws Exception;
+    
+    public void createGroup(String groupName, List<Long> lstMemberId)throws Exception;
 
 }

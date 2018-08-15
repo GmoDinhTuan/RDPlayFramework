@@ -48,8 +48,6 @@
                 <div id ="myDIV">
                     <div class="title-list-room">Danh sách thành viên</div>
                     <div class="list-member-of-room">
-                        @for(membersGroup<- memgroup){
-                        @membersGroup.getUsername()&emsp; }
                     </div>
                 </div>
                 <div class="description">
@@ -59,8 +57,8 @@
             </div>
         </div>
     </div>
-</div>
-<div id="addGroupDiv" style="display: none;">
+    
+    <div id="addGroupDiv" style="display: none;">
 	<div id="addGroup" class="easyui-dialog" title="" value-options="closed:true,modal:true">
 		<div class="PopupContentMid2">
 			<div class="GeneralForm Search1Form">
@@ -70,7 +68,8 @@
 				<h4  id="lstDep">Danh sách thành viên</h4>
 				<div class="Clear"></div>
 				@for(member<- classes){
-            <input type="checkbox" id="@member.getId()" onclick="return Member.chooseMember(this);" value="@member.getId()"/>@member.getUsername()<br></br>}
+            <input type="checkbox" id="@member.getId()" onclick="return Member.chooseMember(this);" value="@member.getId()"/>@member.getUsername()<br></br>
+            }
 				<p id="errMsgDialog" class="ErrorMsgStyle" style="display: none;"></p>
 				<p style="display: none; margin-left: 10px" class="SuccessMsgStyle" id="resultInsertShop"></p>
 			</div>
@@ -82,6 +81,8 @@
 		</div>
 	</div>
 </div>
+</div>
+
 <script type="text/javascript">
 $(function() {  
 	Member.lstMember = new Member.Map();
@@ -100,7 +101,8 @@ $(function() {
 		    }
 		});
 	});
-	console.log("ac0");
+	$('#addGroup').dialog('close');
+	Member.searchMember();
 });
 
 

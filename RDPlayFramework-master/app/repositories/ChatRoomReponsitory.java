@@ -7,6 +7,7 @@ import com.google.inject.ImplementedBy;
 import entities.Groups;
 import entities.Member;
 import entities.MembersGroup;
+import io.ebean.annotation.Transactional;
 import repositories.impl.ChatRoomReponsitoryImpl;
 
 // TODO: Auto-generated Javadoc
@@ -49,6 +50,10 @@ public interface ChatRoomReponsitory {
      * @return the list
      * @throws Exception the exception
      */
-    List<MembersGroup> selectMemberGroup(String id) throws Exception;
+    List<MembersGroup> selectMemberGroup(Long id) throws Exception;
+    
+    
+    @Transactional(rollbackFor = Exception.class)
+    public void createGroup(String groupName, List<Long> lstMemberId) throws Exception;
 
 }

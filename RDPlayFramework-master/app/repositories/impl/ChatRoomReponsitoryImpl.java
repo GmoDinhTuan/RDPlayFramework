@@ -105,4 +105,70 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
     	}
     	
     }
+    
+    @Override
+	@Transactional(rollbackFor = Exception.class)
+    public void leaveGroup(Long groupId, Long memberId)throws Exception{
+    	List<MembersGroup> lstMembersGroup = getListMembersGroup(groupId);
+    	int size = lstMembersGroup.size();
+    	if(size == 1) {
+    		//remove member and delete group
+    		MembersGroup membersGroup = lstMembersGroup.get(0);
+    		membersGroup.setStatus("0");
+    		Ebean.save(membersGroup);
+    		
+    		Groups group = getGroupById(groupId);
+    		if(group != null) {
+    			group.setStatus("0");
+    			Ebean.save(group);
+    		}
+    	}else if(size > 1){
+    		//remove member
+    		MembersGroup membersGroup = getMembersGroupById(groupId, memberId);
+    		if(membersGroup != null) {
+    			membersGroup.setStatus("0");
+        		Ebean.save(membersGroup);
+    		}
+    	}
+    }
+    
+    @Override
+    public MembersGroup getMembersGroupById(Long groupId, Long memberId) throws Exception{
+    	StringBuilder sql = new StringBuilder();
+        sql.append("Select mgr.id, mgr.groupid, mgr.memberid, mgr.status from MembersGroup mgr where  mgr.groupid = :groupId and mgr.memberId = :memberId and status = :status");
+        RawSql rawSql = RawSqlBuilder.parse(sql.toString()).create();
+
+        MembersGroup membersGroup = Ebean.find(MembersGroup.class).setRawSql(rawSql)
+        		.setParameter("groupId", groupId)
+        		.setParameter("memberId", memberId)
+        		.setParameter("status", CommonConsts.VALUE_STATUS_ONE)
+        		.findOne();
+        return membersGroup;
+    }
+    
+    @Override
+    public Groups getGroupById(Long groupId) throws Exception{
+    	StringBuilder sql = new StringBuilder();
+        sql.append("select g.id, g.groupname, g.status, g.description from groups g where g.id = :groupId and status = :status ");
+        RawSql rawSql = RawSqlBuilder.parse(sql.toString()).create();
+
+        Groups Group = Ebean.find(Groups.class).setRawSql(rawSql)
+        		.setParameter("groupId", groupId)
+        		.setParameter("status", CommonConsts.VALUE_STATUS_ONE)
+        		.findOne();
+        return Group;
+    }
+    
+    @Override
+    public List<MembersGroup> getListMembersGroup(Long groupId)throws Exception{
+    	StringBuilder sql = new StringBuilder();
+        sql.append("Select mgr.id, mgr.groupid, mgr.memberid, mgr.status from MembersGroup mgr where  mgr.groupid = :groupId and status = :status");
+        RawSql rawSql = RawSqlBuilder.parse(sql.toString()).create();
+
+        List<MembersGroup> lstMembersGroup = Ebean.find(MembersGroup.class).setRawSql(rawSql)
+        		.setParameter("groupId", groupId)
+        		.setParameter("status", CommonConsts.VALUE_STATUS_ONE)
+        		.findList();
+        return lstMembersGroup;
+    }
 }

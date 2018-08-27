@@ -136,7 +136,7 @@ public class Application extends Controller {
         Http.Request request = request();
         String url = controllers.routes.Application.chatRoom().webSocketURL(request);
         return ok(views.html.chatRoom.render(userList, new ArrayList<Member>(), groupList, memberGroup, "",
-            session(CommonConsts.USERNAME), ,null, url, session(CommonConsts.USERNAME)));
+            session(CommonConsts.USERNAME), null, url, session(CommonConsts.USERNAME)));
     }
 
     /**
@@ -229,6 +229,20 @@ public class Application extends Controller {
         mapUserGroup.put("userList", userList);
         mapUserGroup.put("groupList", groupList);
         return ok(Json.toJson(mapUserGroup));
+
+    }
+    
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result leaveGroup() throws Exception{
+    	JsonNode json = request().body().asJson();
+    	Long groupId = json.findPath("id").asLong();
+    	try {
+        	chatRoomService.leaveGroup(groupId, user.getId());
+        }catch(Exception e) {
+        	e.printStackTrace();
+        	return ok(Json.toJson("error"));
+        }
+        return ok(Json.toJson("success"));
 
     }
 

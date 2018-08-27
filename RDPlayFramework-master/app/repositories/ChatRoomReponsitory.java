@@ -57,5 +57,14 @@ public interface ChatRoomReponsitory {
     
     @Transactional(rollbackFor = Exception.class)
     public void createGroup(String groupName, List<Long> lstMemberId) throws Exception;
+    
+    @Transactional(rollbackFor = Exception.class)
+    public void leaveGroup(Long groupId, Long memberId)throws Exception;
+    
+    public MembersGroup getMembersGroupById(Long groupId, Long memberId) throws Exception;
+    
+    public Groups getGroupById(Long groupId) throws Exception;
+    
+    public List<MembersGroup> getListMembersGroup(Long groupId)throws Exception;
 
 }

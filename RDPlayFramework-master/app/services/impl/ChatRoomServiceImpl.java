@@ -79,4 +79,24 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     public void createGroup(String groupName, List<Long> lstMemberId)throws Exception {
     	chatRoomReponsitory.createGroup(groupName, lstMemberId);
     }
+    
+    @Override
+    public void leaveGroup(Long groupId, Long memberId)throws Exception{
+    	chatRoomReponsitory.leaveGroup(groupId, memberId);
+    }
+    
+    @Override
+    public MembersGroup getMembersGroupById(Long groupId, Long memberId) throws Exception{
+    	return chatRoomReponsitory.getMembersGroupById(groupId, memberId);
+    }
+    
+    @Override
+    public Groups getGroupById(Long groupId) throws Exception{
+    	return chatRoomReponsitory.getGroupById(groupId);
+    }
+    
+    @Override
+    public List<MembersGroup> getListMembersGroup(Long groupId)throws Exception{
+    	return chatRoomReponsitory.getListMembersGroup(groupId);
+    }
 }

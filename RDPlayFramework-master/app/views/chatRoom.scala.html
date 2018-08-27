@@ -19,7 +19,7 @@
         <div class="name-room-chat">@nameGroup
         <div style="float:right;" id="leaveGroupDiv">
         @if(groupId != null){
-        	<a href="javascript:void(0);">Rời nhóm</a>
+        	<a href="javascript:void(0);" id="leaveGroup" onclick="return Member.leaveGroup(@groupId+);">Rời nhóm</a>
         }
 		</div>
         </div>
@@ -122,6 +122,10 @@ $(function() {
     });
     $('#addGroup').dialog('close');
     Member.searchMember();
+    
+    $('#leaveGroup').click(function(){
+    	Member.leaveGroup(id);
+    });
 });
 </script>
 <script type="text/javascript" charset="utf-8" src="@routes.Application.chatRoomJs(name, url)"></script>

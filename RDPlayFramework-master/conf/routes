@@ -3,12 +3,15 @@
 # ~~~~
 
 # An example controller showing a sample home page
++nocsrf
 GET     /login                              controllers.Application.login()
 +nocsrf
 POST    /login                              controllers.Application.authenticate()
 GET     /index                              controllers.Application.index()
 +nocsrf
 POST	/searchmember						controllers.Application.searchMember()
++nocsrf
+POST	/leaveGroup							controllers.Application.leaveGroup()
 +nocsrf
 GET     /chat/:id                           controllers.Application.chat(id: Long, type: String, name: String, description: String)
 GET     /chatRoom                           controllers.Application.chatRoom()

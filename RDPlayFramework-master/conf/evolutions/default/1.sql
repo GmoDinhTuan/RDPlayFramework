@@ -4,37 +4,11 @@
 # --- !Ups
 
 create table groups (
-<<<<<<< HEAD
   id                            number(19) not null,
-=======
-  id                            varchar2(255) not null,
->>>>>>> 5c54caa2ab502b213c9917813b5c433d8a45ab2f
   groupsname                    varchar2(255) not null,
   status                        varchar2(1) not null,
   description                   varchar2(255),
   constraint pk_groups primary key (id)
-<<<<<<< HEAD
-=======
-);
-
-create table member (
-  id                            varchar2(255) not null,
-  username                      varchar2(20) not null,
-  password                      varchar2(20) not null,
-  status                        varchar2(2),
-  role                          varchar2(20) not null,
-  avatar                        varchar2(255),
-  description                   varchar2(255),
-  constraint pk_member primary key (id)
-);
-
-create table members_group (
-  id                            varchar2(255),
-  group_id                      varchar2(255),
-  member_id                     varchar2(255),
-  status                        varchar2(255),
-  username                      varchar2(255)
->>>>>>> 5c54caa2ab502b213c9917813b5c433d8a45ab2f
 );
 create sequence GROUPS_SEQ increment by 1;
 
@@ -59,11 +33,19 @@ create table membersgroup (
 );
 create sequence MEMBERSGROUP_SEQ increment by 1;
 
+create table relationship (
+  id                            number(19) not null,
+  memberfrom                    number(19) not null,
+  memberto                      number(19) not null,
+  name                          varchar2(255) not null,
+  constraint pk_relationship primary key (id)
+);
+create sequence RELATIONSHIP_SEQ increment by 1;
+
 
 # --- !Downs
 
 drop table groups cascade constraints purge;
-<<<<<<< HEAD
 drop sequence GROUPS_SEQ;
 
 drop table member cascade constraints purge;
@@ -71,10 +53,7 @@ drop sequence MEMBER_SEQ;
 
 drop table membersgroup cascade constraints purge;
 drop sequence MEMBERSGROUP_SEQ;
-=======
 
-drop table member cascade constraints purge;
-
-drop table members_group cascade constraints purge;
->>>>>>> 5c54caa2ab502b213c9917813b5c433d8a45ab2f
+drop table relationship cascade constraints purge;
+drop sequence RELATIONSHIP_SEQ;
 

@@ -161,7 +161,7 @@ public class Application extends Controller {
     public Result chat(Long idTo, String type, String name, String description) throws Exception {
         ChatRoomDto chatRoomDto = new ChatRoomDto();
         List<Member> userList = chatRoomService.findUser();
-        List<Groups> groupList = chatRoomService.findAllGroup(idTo);
+        List<Groups> groupList = chatRoomService.findAllGroup(user.getId());
         List<MembersGroup> memberGroup = new ArrayList<>();
         List<Member> lstMemberInGroup = new ArrayList<Member>();
         Http.Request request = request();

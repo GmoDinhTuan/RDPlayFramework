@@ -1,0 +1,8 @@
+@()@main("hello") {
+<fieldset>
+    @helper.form(routes.Application.writeFile, 'enctype -> "multipart/form-data") {
+        @helper.CSRF.formField
+        <input type="file" id="files" name="files" multiple />
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="OK">
+</fieldset>
+} }

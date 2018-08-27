@@ -17,32 +17,32 @@ import services.ChatRoomService;
  */
 public class ChatRoomServiceImpl implements ChatRoomService{
 
-	/** The chat room reponsitory. */
-	private ChatRoomReponsitory chatRoomReponsitory;
+    /** The chat room reponsitory. */
+    private ChatRoomReponsitory chatRoomReponsitory;
 
-	/**
-	 * Instantiates a new chat room service impl.
-	 *
-	 * @param chatRoomReponsitory the chat room reponsitory
-	 */
-	@Inject
-	public ChatRoomServiceImpl(ChatRoomReponsitory chatRoomReponsitory) {
-		this.chatRoomReponsitory = chatRoomReponsitory;
-	}
+    /**
+     * Instantiates a new chat room service impl.
+     *
+     * @param chatRoomReponsitory the chat room reponsitory
+     */
+    @Inject
+    public ChatRoomServiceImpl(ChatRoomReponsitory chatRoomReponsitory) {
+        this.chatRoomReponsitory = chatRoomReponsitory;
+    }
 
-	/* (non-Javadoc)
-	 * @see services.ChatRoomService#checkLogin(bean.LoginFormBean)
-	 */
-	@Override
-	public Member checkLogin(String username, String password) throws Exception {
-		Member user = chatRoomReponsitory.findByName(username, password);
-		if (user != null) {
-			return user;
-		}
-		return null;
-	}
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#checkLogin(bean.LoginFormBean)
+     */
+    @Override
+    public Member checkLogin(String username, String password) throws Exception {
+        Member user = chatRoomReponsitory.findByName(username, password);
+        if (user != null) {
+            return user;
+        }
+        return null;
+    }
 
-	   /* (non-Javadoc)
+       /* (non-Javadoc)
      * @see services.ChatRoomService#findUser(java.lang.String, java.lang.String)
      */
     @Override
@@ -59,7 +59,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         List<Groups> listGroups = chatRoomReponsitory.findAllGroup();
         return listGroups;
     }
-    
+
     @Override
     public List<Groups> findAllUserGroup(Long id) throws Exception {
         List<Groups> listGroups = chatRoomReponsitory.findAllUserGroup(id);
@@ -74,29 +74,29 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         List<Member> listMemberGroups = chatRoomReponsitory.selectMemberGroup(id);
         return listMemberGroups;
     }
-    
+
     @Override
     public void createGroup(String groupName, List<Long> lstMemberId)throws Exception {
-    	chatRoomReponsitory.createGroup(groupName, lstMemberId);
+        chatRoomReponsitory.createGroup(groupName, lstMemberId);
     }
-    
+
     @Override
     public void leaveGroup(Long groupId, Long memberId)throws Exception{
-    	chatRoomReponsitory.leaveGroup(groupId, memberId);
+        chatRoomReponsitory.leaveGroup(groupId, memberId);
     }
-    
+
     @Override
     public MembersGroup getMembersGroupById(Long groupId, Long memberId) throws Exception{
-    	return chatRoomReponsitory.getMembersGroupById(groupId, memberId);
+        return chatRoomReponsitory.getMembersGroupById(groupId, memberId);
     }
-    
+
     @Override
     public Groups getGroupById(Long groupId) throws Exception{
-    	return chatRoomReponsitory.getGroupById(groupId);
+        return chatRoomReponsitory.getGroupById(groupId);
     }
-    
+
     @Override
     public List<MembersGroup> getListMembersGroup(Long groupId)throws Exception{
-    	return chatRoomReponsitory.getListMembersGroup(groupId);
+        return chatRoomReponsitory.getListMembersGroup(groupId);
     }
 }

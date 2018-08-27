@@ -35,4 +35,7 @@ public class CommonConsts {
 
     /** The Constant PARAM_GROUP. */
     public static final String PARAM_GROUP = "group";
+
+    /** The Constant HCM_JAVA. */
+    public static final String HCM_JAVA = "hcm_java";
 }

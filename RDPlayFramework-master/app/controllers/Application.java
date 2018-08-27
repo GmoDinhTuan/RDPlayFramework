@@ -1,5 +1,11 @@
 package controllers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -27,17 +32,20 @@ import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
 import bean.LoginFormBean;
 import common.CommonConsts;
+import dto.ChatRoomDto;
 import entities.Groups;
 import entities.Member;
 import entities.MembersGroup;
+import filters.ContentSecurityPolicyFilter;
 import play.data.Form;
 import play.data.FormFactory;
-import play.db.jpa.JPAApi;
 import play.libs.F;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Http;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import services.ChatRoomService;
@@ -53,8 +61,6 @@ public class Application extends Controller {
 
     /** The form factory. */
     private FormFactory formFactory;
-
-	private final JPAApi jpa;
 
     /** The user. */
     private Member user;
@@ -72,7 +78,7 @@ public class Application extends Controller {
      */
     @Inject
     public Application(ActorSystem actorSystem,
-                          Materializer mat, ChatRoomService chatRoomService, FormFactory formFactory, JPAApi jpa) {
+                          Materializer mat, ChatRoomService chatRoomService, FormFactory formFactory) {
         org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
         LoggingAdapter logging = Logging.getLogger(actorSystem.eventStream(), logger.getName());
 
@@ -89,7 +95,6 @@ public class Application extends Controller {
         this.userFlow = Flow.fromSinkAndSource(chatSink, chatSource).log("userFlow", logging);
         this.chatRoomService = chatRoomService;
         this.formFactory = formFactory;
-        this.jpa = jpa;
     }
 
     /**
@@ -113,60 +118,64 @@ public class Application extends Controller {
         Form<LoginFormBean> loginForm = formFactory.form(LoginFormBean.class).bindFromRequest();
         user = chatRoomService.checkLogin(loginForm.rawData().get(CommonConsts.USERNAME), loginForm.rawData().get(CommonConsts.PASSWORD));
         if(user == null){
-            return ok("Login không thành công");
+            return redirect(controllers.routes.Application.login());
         }
-        return redirect(controllers.routes.Application.index());
+        ContentSecurityPolicyFilter contentSecurityPolicyFilter = new ContentSecurityPolicyFilter();
+        contentSecurityPolicyFilter.setRoomName(user.getUsername());
+        ChatRoomDto chatRoomDto = new ChatRoomDto();
+        chatRoomDto.setRoomName(user.getUsername());
+        return redirect(controllers.routes.Application.index(user.getUsername()));
     }
 
     /**
      * Index.
      *
+     * @param username the username
      * @return the result
      * @throws Exception the exception
      */
-    public Result index() throws Exception {
+    public Result index(String username) throws Exception {
         session(CommonConsts.ID, user.getId().toString());
         session(CommonConsts.USERNAME, user.getUsername());
         session(CommonConsts.PASSWORD, user.getPassword());
         List<Member> userList = chatRoomService.findUser();
         List<Groups> groupList = chatRoomService.findAllUserGroup(user.getId());
         List<MembersGroup> memberGroup = new ArrayList<>();
-//        return ok(views.html.chatRoom.render(userList, new ArrayList<Member>(), groupList, memberGroup, "",
-//            session(CommonConsts.USERNAME),null));
+        List<Member> lstMemberInGroup = new ArrayList<Member>();
         Http.Request request = request();
-        String url = controllers.routes.Application.chatRoom().webSocketURL(request);
-        return ok(views.html.chatRoom.render(userList, new ArrayList<Member>(), groupList, memberGroup, "",
-            session(CommonConsts.USERNAME), null, url, session(CommonConsts.USERNAME)));
+        String url = controllers.routes.Application.chatRoom(username).webSocketURL(request);
+        return ok(/*views.html.chatRoom.render(userList, groupList, memberGroup, "",
+            username, url, username)*/views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, "", username, null, url, username));
     }
 
     /**
      * Chat.
      *
-     * @param id the id
+     * @param idTo the id to
      * @param type the type
      * @param name the name
      * @param description the description
      * @return the result
      * @throws Exception the exception
      */
-    public Result chat(Long id, String type, String name, String description) throws Exception {
+    public Result chat(Long idTo, String type, String name, String description) throws Exception {
+        ChatRoomDto chatRoomDto = new ChatRoomDto();
         List<Member> userList = chatRoomService.findUser();
         List<Groups> groupList = chatRoomService.findAllGroup();
         List<MembersGroup> memberGroup = new ArrayList<>();
         List<Member> lstMemberInGroup = new ArrayList<Member>();
         Http.Request request = request();
-        String url = controllers.routes.Application.chatRoom().webSocketURL(request);
-        if (type.equals("group")) {
-        	lstMemberInGroup = chatRoomService.selectMemberGroup(id);
-        	return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name, id, url, session(CommonConsts.USERNAME)));
+        if (type.equals(CommonConsts.PARAM_GROUP)) {
+            //memberGroup = chatRoomService.selectMemberGroup(idTo);
+            lstMemberInGroup = chatRoomService.selectMemberGroup(idTo);
+            chatRoomDto.setRoomName(name);
+            String url = controllers.routes.Application.chatRoom(name).webSocketURL(request);
+            return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name, idTo, url, session(CommonConsts.USERNAME)));
+        } else {
+            chatRoomDto.setRoomName(sortId(user.getId(), idTo));
+            String url = controllers.routes.Application.chatRoom(sortId(user.getId(), idTo)).webSocketURL(request);
+            return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name, idTo, url, session(CommonConsts.USERNAME)));
         }
-        return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name, null, url, session(CommonConsts.USERNAME)));
-//        return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name,null));
-//        if (type.equals(CommonConsts.PARAM_GROUP)) {
-//            memberGroup = chatRoomService.selectMemberGroup(id);
-//        }
-        
-//        return ok(views.html.chatRoom.render(userList, groupList, memberGroup, description, name, url, session(CommonConsts.USERNAME)));
     }
 
     /**
@@ -183,9 +192,11 @@ public class Application extends Controller {
     /**
      * Chat room.
      *
+     * @param roomName the room name
      * @return the web socket
      */
-    public WebSocket chatRoom() {
+    public WebSocket chatRoom(String roomName) {
+        System.out.println(roomName);
         return WebSocket.Text.acceptOrResult(request -> {
             if (sameOriginCheck(request)) {
                 return CompletableFuture.completedFuture(F.Either.Right(userFlow));
@@ -220,75 +231,56 @@ public class Application extends Controller {
      * Adds the group.
      *
      * @return the result
+     * @throws Exception the exception
      */
     @BodyParser.Of(BodyParser.Json.class)
     public Result searchMember() throws Exception{
-    	List<Member> userList = chatRoomService.findUser();
+        List<Member> userList = chatRoomService.findUser();
         List<Groups> groupList = chatRoomService.findAllUserGroup(user.getId());
         Map<String, List<?>> mapUserGroup = new HashMap<String, List<?>>();
         mapUserGroup.put("userList", userList);
         mapUserGroup.put("groupList", groupList);
         return ok(Json.toJson(mapUserGroup));
-
     }
-    
+
+    /**
+     * Leave group.
+     *
+     * @return the result
+     * @throws Exception the exception
+     */
     @BodyParser.Of(BodyParser.Json.class)
     public Result leaveGroup() throws Exception{
-    	JsonNode json = request().body().asJson();
-    	Long groupId = json.findPath("id").asLong();
-    	try {
-        	chatRoomService.leaveGroup(groupId, user.getId());
+        JsonNode json = request().body().asJson();
+        Long groupId = json.findPath("id").asLong();
+        try {
+            chatRoomService.leaveGroup(groupId, user.getId());
         }catch(Exception e) {
-        	e.printStackTrace();
-        	return ok(Json.toJson("error"));
+            e.printStackTrace();
+            return ok(Json.toJson("error"));
         }
         return ok(Json.toJson("success"));
 
     }
 
+    /**
+     * Adds the group.
+     *
+     * @return the result
+     */
     @BodyParser.Of(BodyParser.Json.class)
     public Result addGroup(){
-        JsonNode json = request().body()
-                                 .asJson();
+        JsonNode json = request().body().asJson();
         String groupName = json.findPath("groupName").textValue();
         List<Long> lstMemberId = new ArrayList<Long>();
-//        jpa.withTransaction(()->{
-//
-//
-//        });
         json.findPath("lstMember").forEach((JsonNode node) -> {
-
-    		lstMemberId.add(node.asLong());
-//        	Member member = new Member();
-//        	member.setId(node.asLong());
-//        	Groups group = new Groups();
-//        	group.setGroupsname(groupName);
-//        	group.setStatus("1");
-//        	group.insert();
-//        	EntityManager em = jpa.em();
-//
-//        	MembersGroup membersGroup = new MembersGroup();
-//        	membersGroup.setGroupId(group.getId());
-//        	membersGroup.setMemberId(member.getId());
-//        	membersGroup.setStatus("1");
-//        	membersGroup.insert();
+            lstMemberId.add(node.asLong());
         });
         try {
-        	chatRoomService.createGroup(groupName, lstMemberId);
+            chatRoomService.createGroup(groupName, lstMemberId);
         }catch(Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
-
-
-
-//        Member person = Json.fromJson(json, Person.class);
-//        if(name == null) {
-//            return badRequest("Missing parameter [code]");
-//        } else {
-//            return ok(toJson(name));
-//        }
-
-////        person.save();
         return ok(Json.toJson(lstMemberId));
     }
 
@@ -327,4 +319,75 @@ public class Application extends Controller {
         }
     }
 
+    /**
+     * Write file from client to server.
+     *
+     * @return the result
+     * @throws Exception the exception
+     */
+    public Result writeFile() throws Exception {
+        MultipartFormData<File> body = request().body().asMultipartFormData();
+        FilePart<File> file = body.getFile("files");
+        if (file != null) {
+            String fileName = file.getFilename();
+            File srcFile = (File) file.getFile();
+            byte[] fileData = new byte[(int) srcFile.length()];
+            FileInputStream in = new FileInputStream(srcFile);
+            in.read(fileData);
+            in.close();
+            File dirFile = new File("public\\files\\" + fileName);
+            OutputStream os = new FileOutputStream(dirFile);
+            os.write(fileData);
+            printContent(dirFile);
+            os.close();
+            return ok("true");
+        }
+         return ok("false");
+    }
+
+    /**
+     * Read file from server.
+     *
+     * @param fileName the file name
+     * @return the result
+     * @throws Exception the exception
+     */
+    public Result readFile(String fileName) throws Exception {
+        File dirFile = new File("public\\files\\" + fileName);
+        boolean inline = true;
+        return ok(dirFile, inline);
+    }
+
+    /**
+     * Prints the content file.
+     *
+     * @param file the file
+     * @throws Exception the exception
+     */
+    public static void printContent(File file) throws Exception {
+        System.out.println("Print File Content");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            System.out.println(line);
+        }
+        br.close();
+    }
+
+    /**
+     * Sort id.
+     *
+     * @param fromId the from id
+     * @param toId the to id
+     * @return the string
+     */
+    private String sortId(Long fromId, Long toId) {
+        String sortId;
+        if(fromId >= toId) {
+            sortId = fromId.toString() + toId.toString();
+        } else {
+            sortId = toId.toString() + fromId.toString();
+        }
+        return sortId;
+    }
 }

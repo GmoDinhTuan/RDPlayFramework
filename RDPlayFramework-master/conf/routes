@@ -7,17 +7,22 @@
 GET     /login                              controllers.Application.login()
 +nocsrf
 POST    /login                              controllers.Application.authenticate()
-GET     /index                              controllers.Application.index()
+GET     /index/:username                    controllers.Application.index(username: String)
 +nocsrf
-POST	/searchmember						controllers.Application.searchMember()
+POST    /searchmember                       controllers.Application.searchMember()
 +nocsrf
 POST	/leaveGroup							controllers.Application.leaveGroup()
 +nocsrf
 GET     /chat/:id                           controllers.Application.chat(id: Long, type: String, name: String, description: String)
-GET     /chatRoom                           controllers.Application.chatRoom()
+GET     /chatRoom/:roomName                 controllers.Application.chatRoom(roomName: String)
 GET     /assets/javascripts/chatroom.js     controllers.Application.chatRoomJs(name, url)
++nocsrf
+POST     /writeFile                         controllers.Application.writeFile()
+
+GET     /file/:nameFile                     controllers.Application.readFile(nameFile: String)
 
 +nocsrf
 POST    /addgroup                           controllers.Application.addGroup()
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/                            controllers.Assets.at(path="/public/files")

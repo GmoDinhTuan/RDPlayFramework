@@ -105,14 +105,16 @@
 
 .attachment {
     width: 50px;
-    min-height: 19px;
+    max-height: 19px;
     float: left;
 }
 
 .img-attch {
     width: 16px;
     min-height: 16px;
-    margin-left: 14px;
+    position: relative;
+    left: 14px;
+
 }
 
 .img-voice {
@@ -145,7 +147,7 @@
 
 .message {
     width: 100%;
-    min-height: 76px;
+    border-bottom: 1px solid #eee;
 }
 
 .list-room {
@@ -194,4 +196,18 @@
 
 #myFooter {
     margin-top: 0px !important;
+}
+
+.message.me {
+    background: #FFC;
+}
+
+.inputfile {
+	width: 20px;
+	opacity: 0;
+	position: relative;
+	top: -20px;
+	left: 10px;
+	height: 20px !important;
+
 }

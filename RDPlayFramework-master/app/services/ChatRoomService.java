@@ -39,7 +39,7 @@ public interface ChatRoomService {
      * @return the list
      * @throws Exception the exception
      */
-    List<Groups> findAllGroup() throws Exception;
+    List<Groups> findAllGroup(Long id) throws Exception;
 
     /**
      * Find all user group.

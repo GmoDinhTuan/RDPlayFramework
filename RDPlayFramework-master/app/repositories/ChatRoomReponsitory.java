@@ -38,11 +38,19 @@ public interface ChatRoomReponsitory {
     /**
      * Find all group.
      *
+     * @param id the id
      * @return the list
      * @throws Exception the exception
      */
-    List<Groups> findAllGroup() throws Exception;
-    
+    List<Groups> findAllGroup(Long id) throws Exception;
+
+    /**
+     * Find all user group.
+     *
+     * @param id the id
+     * @return the list
+     * @throws Exception the exception
+     */
     public List<Groups> findAllUserGroup(Long id) throws Exception;
 
     /**
@@ -53,18 +61,54 @@ public interface ChatRoomReponsitory {
      * @throws Exception the exception
      */
     List<Member> selectMemberGroup(Long id) throws Exception;
-    
-    
+
+
+    /**
+     * Creates the group.
+     *
+     * @param groupName the group name
+     * @param lstMemberId the lst member id
+     * @throws Exception the exception
+     */
     @Transactional(rollbackFor = Exception.class)
     public void createGroup(String groupName, List<Long> lstMemberId) throws Exception;
-    
+
+    /**
+     * Leave group.
+     *
+     * @param groupId the group id
+     * @param memberId the member id
+     * @throws Exception the exception
+     */
     @Transactional(rollbackFor = Exception.class)
     public void leaveGroup(Long groupId, Long memberId)throws Exception;
-    
+
+    /**
+     * Gets the members group by id.
+     *
+     * @param groupId the group id
+     * @param memberId the member id
+     * @return the members group by id
+     * @throws Exception the exception
+     */
     public MembersGroup getMembersGroupById(Long groupId, Long memberId) throws Exception;
-    
+
+    /**
+     * Gets the group by id.
+     *
+     * @param groupId the group id
+     * @return the group by id
+     * @throws Exception the exception
+     */
     public Groups getGroupById(Long groupId) throws Exception;
-    
+
+    /**
+     * Gets the list members group.
+     *
+     * @param groupId the group id
+     * @return the list members group
+     * @throws Exception the exception
+     */
     public List<MembersGroup> getListMembersGroup(Long groupId)throws Exception;
 
 }

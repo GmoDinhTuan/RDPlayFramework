@@ -12,7 +12,10 @@
             </div>
         </div>
         <ul id="members" class="all-members">
-
+            @for(groups<- group){
+            <a href="@routes.Application.chat(groups.getId(), "group", groups.getGroupsname(), groups.getDescription())"><li class="user">@groups.getGroupsname()</li></a> }
+            @for(member<- classes){
+            <a href="@routes.Application.chat(member.getId(), "member", member.getUsername(), member.getDescription())"><li class="user">@member.getUsername()</li></a> }
         </ul>
     </div>
     <div class="content-right">

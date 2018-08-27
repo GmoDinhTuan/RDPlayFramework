@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import entities.Groups;
 import entities.Member;
 import entities.MembersGroup;
-import io.ebean.annotation.Transactional;
 import repositories.ChatRoomReponsitory;
 import services.ChatRoomService;
 
@@ -55,11 +54,14 @@ public class ChatRoomServiceImpl implements ChatRoomService{
      * @see services.ChatRoomService#findAllGroup()
      */
     @Override
-    public List<Groups> findAllGroup() throws Exception {
-        List<Groups> listGroups = chatRoomReponsitory.findAllGroup();
+    public List<Groups> findAllGroup(Long id) throws Exception {
+        List<Groups> listGroups = chatRoomReponsitory.findAllGroup(id);
         return listGroups;
     }
 
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#findAllUserGroup(java.lang.Long)
+     */
     @Override
     public List<Groups> findAllUserGroup(Long id) throws Exception {
         List<Groups> listGroups = chatRoomReponsitory.findAllUserGroup(id);
@@ -75,26 +77,41 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         return listMemberGroups;
     }
 
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#createGroup(java.lang.String, java.util.List)
+     */
     @Override
     public void createGroup(String groupName, List<Long> lstMemberId)throws Exception {
         chatRoomReponsitory.createGroup(groupName, lstMemberId);
     }
 
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#leaveGroup(java.lang.Long, java.lang.Long)
+     */
     @Override
     public void leaveGroup(Long groupId, Long memberId)throws Exception{
         chatRoomReponsitory.leaveGroup(groupId, memberId);
     }
 
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#getMembersGroupById(java.lang.Long, java.lang.Long)
+     */
     @Override
     public MembersGroup getMembersGroupById(Long groupId, Long memberId) throws Exception{
         return chatRoomReponsitory.getMembersGroupById(groupId, memberId);
     }
 
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#getGroupById(java.lang.Long)
+     */
     @Override
     public Groups getGroupById(Long groupId) throws Exception{
         return chatRoomReponsitory.getGroupById(groupId);
     }
 
+    /* (non-Javadoc)
+     * @see services.ChatRoomService#getListMembersGroup(java.lang.Long)
+     */
     @Override
     public List<MembersGroup> getListMembersGroup(Long groupId)throws Exception{
         return chatRoomReponsitory.getListMembersGroup(groupId);

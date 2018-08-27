@@ -56,15 +56,18 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
      * @see repositories.ChatRoomReponsitory#findAllGroup()
      */
     @Override
-    public List<Groups> findAllGroup() throws Exception {
+    public List<Groups> findAllGroup(Long id) throws Exception {
     	StringBuilder sql = new StringBuilder();
-        sql.append(" Select grp.groupsname, grp.id, grp.status, grp.description from groups grp  where grp.status= " + CommonConsts.VALUE_STATUS_ONE);
+        sql.append(" Select grp.groupsname, grp.id, grp.status, grp.description from groups grp join membersgroup mgr on mgr.id = grp.id where grp.status= " + CommonConsts.VALUE_STATUS_ONE + "and mgr.memberid = :id");
         RawSql rawSql = RawSqlBuilder.parse(sql.toString()).create();
 
-        List<Groups> listGroup = Ebean.find(Groups.class).setRawSql(rawSql).findList();
+        List<Groups> listGroup = Ebean.find(Groups.class).setRawSql(rawSql).setParameter("id", id).findList();
         return listGroup;
     }
-    
+
+    /* (non-Javadoc)
+     * @see repositories.ChatRoomReponsitory#findAllUserGroup(java.lang.Long)
+     */
     @Override
     public List<Groups> findAllUserGroup(Long id) throws Exception {
     	StringBuilder sql = new StringBuilder();
@@ -75,9 +78,12 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
         return listGroup;
     }
 
+    /* (non-Javadoc)
+     * @see repositories.ChatRoomReponsitory#selectMemberGroup(java.lang.Long)
+     */
     @Override
     public List<Member> selectMemberGroup(Long id) throws Exception {
-        String sql = " Select mem.username from member mem join membersgroup memgroup on mem.id = memgroup.memberid where memgroup.status=" 
+        String sql = " Select mem.username from member mem join membersgroup memgroup on mem.id = memgroup.memberid where memgroup.status="
     + CommonConsts.VALUE_STATUS_ONE +" and memgroup.groupid = :groupid";
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -85,7 +91,10 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
             .setParameter(CommonConsts.GROUP_ID, id).findList();
         return listGroup;
     }
-    
+
+    /* (non-Javadoc)
+     * @see repositories.ChatRoomReponsitory#createGroup(java.lang.String, java.util.List)
+     */
     @Override
 	@Transactional(rollbackFor = Exception.class)
     public void createGroup(String groupName, List<Long> lstMemberId) throws Exception{
@@ -96,16 +105,19 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
     	int size = lstMemberId.size();
     	for(int i=0;i<size;i++) {
 //    		Member member = lstMemberId.get(i);
-    		
+
     		MembersGroup membersGroup = new MembersGroup();
         	membersGroup.setGroupId(group.getId());
         	membersGroup.setMemberId(lstMemberId.get(i));
         	membersGroup.setStatus("1");
         	Ebean.save(membersGroup);
     	}
-    	
+
     }
-    
+
+    /* (non-Javadoc)
+     * @see repositories.ChatRoomReponsitory#leaveGroup(java.lang.Long, java.lang.Long)
+     */
     @Override
 	@Transactional(rollbackFor = Exception.class)
     public void leaveGroup(Long groupId, Long memberId)throws Exception{
@@ -116,7 +128,7 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
     		MembersGroup membersGroup = lstMembersGroup.get(0);
     		membersGroup.setStatus("0");
     		Ebean.save(membersGroup);
-    		
+
     		Groups group = getGroupById(groupId);
     		if(group != null) {
     			group.setStatus("0");
@@ -131,7 +143,10 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
     		}
     	}
     }
-    
+
+    /* (non-Javadoc)
+     * @see repositories.ChatRoomReponsitory#getMembersGroupById(java.lang.Long, java.lang.Long)
+     */
     @Override
     public MembersGroup getMembersGroupById(Long groupId, Long memberId) throws Exception{
     	StringBuilder sql = new StringBuilder();
@@ -145,7 +160,10 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
         		.findOne();
         return membersGroup;
     }
-    
+
+    /* (non-Javadoc)
+     * @see repositories.ChatRoomReponsitory#getGroupById(java.lang.Long)
+     */
     @Override
     public Groups getGroupById(Long groupId) throws Exception{
     	StringBuilder sql = new StringBuilder();
@@ -158,7 +176,10 @@ public class ChatRoomReponsitoryImpl implements ChatRoomReponsitory {
         		.findOne();
         return Group;
     }
-    
+
+    /* (non-Javadoc)
+     * @see repositories.ChatRoomReponsitory#getListMembersGroup(java.lang.Long)
+     */
     @Override
     public List<MembersGroup> getListMembersGroup(Long groupId)throws Exception{
     	StringBuilder sql = new StringBuilder();

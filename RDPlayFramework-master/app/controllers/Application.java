@@ -35,8 +35,6 @@ import common.CommonConsts;
 import dto.ChatRoomDto;
 import entities.Groups;
 import entities.Member;
-import entities.MembersGroup;
-import filters.ContentSecurityPolicyFilter;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.F;
@@ -50,7 +48,6 @@ import play.mvc.Result;
 import play.mvc.WebSocket;
 import services.ChatRoomService;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Application.
  */
@@ -61,9 +58,6 @@ public class Application extends Controller {
 
     /** The form factory. */
     private FormFactory formFactory;
-
-    /** The user. */
-    private Member user;
 
     /** The user flow. */
     private final Flow<String, String, NotUsed> userFlow;
@@ -78,7 +72,7 @@ public class Application extends Controller {
      */
     @Inject
     public Application(ActorSystem actorSystem,
-                          Materializer mat, ChatRoomService chatRoomService, FormFactory formFactory) {
+                          Materializer mat, ChatRoomService chatRoomService, FormFactory formFactory/*, @Named("userParentActor") ActorRef userParentActor*/) {
         org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
         LoggingAdapter logging = Logging.getLogger(actorSystem.eventStream(), logger.getName());
 
@@ -109,6 +103,16 @@ public class Application extends Controller {
     }
 
     /**
+     * Logout.
+     *
+     * @return the result
+     */
+    public Result logout() {
+         session().clear();
+         return redirect(controllers.routes.Application.login());
+    }
+
+    /**
      * Authenticate.
      *
      * @return the result
@@ -116,14 +120,15 @@ public class Application extends Controller {
      */
     public Result authenticate() throws Exception{
         Form<LoginFormBean> loginForm = formFactory.form(LoginFormBean.class).bindFromRequest();
-        user = chatRoomService.checkLogin(loginForm.rawData().get(CommonConsts.USERNAME), loginForm.rawData().get(CommonConsts.PASSWORD));
+        Member user = chatRoomService.checkLogin(loginForm.rawData().get(CommonConsts.USERNAME), loginForm.rawData().get(CommonConsts.PASSWORD));
         if(user == null){
             return redirect(controllers.routes.Application.login());
         }
-        ContentSecurityPolicyFilter contentSecurityPolicyFilter = new ContentSecurityPolicyFilter();
-        contentSecurityPolicyFilter.setRoomName(user.getUsername());
         ChatRoomDto chatRoomDto = new ChatRoomDto();
         chatRoomDto.setRoomName(user.getUsername());
+        session(CommonConsts.ID, user.getId().toString());
+        session(CommonConsts.USERNAME, user.getUsername());
+        session(CommonConsts.PASSWORD, user.getPassword());
         return redirect(controllers.routes.Application.index(user.getUsername()));
     }
 
@@ -135,17 +140,17 @@ public class Application extends Controller {
      * @throws Exception the exception
      */
     public Result index(String username) throws Exception {
-        session(CommonConsts.ID, user.getId().toString());
-        session(CommonConsts.USERNAME, user.getUsername());
-        session(CommonConsts.PASSWORD, user.getPassword());
-        List<Member> userList = chatRoomService.findUser();
-        List<Groups> groupList = chatRoomService.findAllUserGroup(user.getId());
-        List<MembersGroup> memberGroup = new ArrayList<>();
-        List<Member> lstMemberInGroup = new ArrayList<Member>();
-        Http.Request request = request();
-        String url = controllers.routes.Application.chatRoom(username).webSocketURL(request);
-        return ok(/*views.html.chatRoom.render(userList, groupList, memberGroup, "",
-            username, url, username)*/views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, "", username, null, url, username));
+        if(session().get(CommonConsts.ID) != null && session().get(CommonConsts.ID).isEmpty() == false){
+            Long userId = Long.valueOf(session().get(CommonConsts.ID));
+            List<Member> userList = chatRoomService.findUser(userId);
+            List<Groups> groupList = chatRoomService.findAllUserGroup(userId);
+            List<Member> lstMemberInGroup = new ArrayList<Member>();
+            Http.Request request = request();
+            String url = controllers.routes.Application.chatRoom(username).webSocketURL(request);
+            return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, CommonConsts.EMPTY, username, null, url, username));
+        }else{
+            return forbidden();
+        }
     }
 
     /**
@@ -159,23 +164,27 @@ public class Application extends Controller {
      * @throws Exception the exception
      */
     public Result chat(Long idTo, String type, String name, String description) throws Exception {
-        ChatRoomDto chatRoomDto = new ChatRoomDto();
-        List<Member> userList = chatRoomService.findUser();
-        List<Groups> groupList = chatRoomService.findAllGroup(user.getId());
-        List<MembersGroup> memberGroup = new ArrayList<>();
-        List<Member> lstMemberInGroup = new ArrayList<Member>();
-        Http.Request request = request();
-        if (type.equals(CommonConsts.PARAM_GROUP)) {
-            //memberGroup = chatRoomService.selectMemberGroup(idTo);
-            lstMemberInGroup = chatRoomService.selectMemberGroup(idTo);
-            chatRoomDto.setRoomName(name);
-            String url = controllers.routes.Application.chatRoom(name).webSocketURL(request);
-            return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name, idTo, url, session(CommonConsts.USERNAME)));
-        } else {
-            chatRoomDto.setRoomName(sortId(user.getId(), idTo));
-            String url = controllers.routes.Application.chatRoom(sortId(user.getId(), idTo)).webSocketURL(request);
-            return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, memberGroup, description, name, idTo, url, session(CommonConsts.USERNAME)));
+        if(session().get(CommonConsts.ID) != null && session().get(CommonConsts.ID).isEmpty() == false){
+            Long userId = Long.valueOf(session().get(CommonConsts.ID));
+            ChatRoomDto chatRoomDto = new ChatRoomDto();
+            List<Member> userList = chatRoomService.findUser(userId);
+            List<Groups> groupList = chatRoomService.findAllUserGroup(userId);
+            List<Member> lstMemberInGroup = new ArrayList<Member>();
+            Http.Request request = request();
+            if (type.equals(CommonConsts.PARAM_GROUP)) {
+                lstMemberInGroup = chatRoomService.selectMemberGroup(idTo);
+                chatRoomDto.setRoomName(name);
+                String url = controllers.routes.Application.chatRoom(name).webSocketURL(request);
+                return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, description, name, idTo, url, session(CommonConsts.USERNAME)));
+            } else {
+                chatRoomDto.setRoomName(sortId(userId, idTo));
+                String url = controllers.routes.Application.chatRoom(sortId(userId, idTo)).webSocketURL(request);
+                return ok(views.html.chatRoom.render(userList, lstMemberInGroup, groupList, description, name, null, url, session(CommonConsts.USERNAME)));
+            }
+        }else{
+            return forbidden();
         }
+
     }
 
     /**
@@ -196,7 +205,6 @@ public class Application extends Controller {
      * @return the web socket
      */
     public WebSocket chatRoom(String roomName) {
-        System.out.println(roomName);
         return WebSocket.Text.acceptOrResult(request -> {
             if (sameOriginCheck(request)) {
                 return CompletableFuture.completedFuture(F.Either.Right(userFlow));
@@ -235,12 +243,17 @@ public class Application extends Controller {
      */
     @BodyParser.Of(BodyParser.Json.class)
     public Result searchMember() throws Exception{
-        List<Member> userList = chatRoomService.findUser();
-        List<Groups> groupList = chatRoomService.findAllUserGroup(user.getId());
-        Map<String, List<?>> mapUserGroup = new HashMap<String, List<?>>();
-        mapUserGroup.put("userList", userList);
-        mapUserGroup.put("groupList", groupList);
-        return ok(Json.toJson(mapUserGroup));
+        if(session().get(CommonConsts.ID) != null && session().get(CommonConsts.ID).isEmpty() == false){
+            Long userId = Long.valueOf(session().get(CommonConsts.ID));
+            List<Member> userList = chatRoomService.findUser(userId);
+            List<Groups> groupList = chatRoomService.findAllUserGroup(userId);
+            Map<String, List<?>> mapUserGroup = new HashMap<String, List<?>>();
+            mapUserGroup.put("groupList", groupList);
+            mapUserGroup.put("userList", userList);
+            return ok(Json.toJson(mapUserGroup));
+        }else{
+            return forbidden(Json.toJson("error"));
+        }
     }
 
     /**
@@ -251,16 +264,20 @@ public class Application extends Controller {
      */
     @BodyParser.Of(BodyParser.Json.class)
     public Result leaveGroup() throws Exception{
-        JsonNode json = request().body().asJson();
-        Long groupId = json.findPath("id").asLong();
-        try {
-            chatRoomService.leaveGroup(groupId, user.getId());
-        }catch(Exception e) {
-            e.printStackTrace();
-            return ok(Json.toJson("error"));
+        if(session().get(CommonConsts.ID) != null && session().get(CommonConsts.ID).isEmpty() == false){
+            Long userId = Long.valueOf(session().get(CommonConsts.ID));
+            JsonNode json = request().body().asJson();
+            Long groupId = json.findPath(CommonConsts.ID).asLong();
+            try {
+                chatRoomService.leaveGroup(groupId, userId);
+            }catch(Exception e) {
+                e.printStackTrace();
+                return ok(Json.toJson("error"));
+            }
+            return redirect(controllers.routes.Application.index(session(CommonConsts.USERNAME)));
+        }else{
+            return forbidden(Json.toJson("error"));
         }
-        return ok(Json.toJson("success"));
-
     }
 
     /**
@@ -270,36 +287,24 @@ public class Application extends Controller {
      */
     @BodyParser.Of(BodyParser.Json.class)
     public Result addGroup(){
-        JsonNode json = request().body().asJson();
-        String groupName = json.findPath("groupName").textValue();
-        List<Long> lstMemberId = new ArrayList<Long>();
-        json.findPath("lstMember").forEach((JsonNode node) -> {
-            lstMemberId.add(node.asLong());
-        });
-        try {
-            chatRoomService.createGroup(groupName, lstMemberId);
-        }catch(Exception e) {
-            e.printStackTrace();
+        if(session().get(CommonConsts.ID) != null && session().get(CommonConsts.ID).isEmpty() == false){
+            Long userId = Long.valueOf(session().get(CommonConsts.ID));
+            JsonNode json = request().body().asJson();
+            String groupName = json.findPath("groupName").textValue();
+            List<Long> lstMemberId = new ArrayList<Long>();
+            json.findPath("lstMember").forEach((JsonNode node) -> {
+                lstMemberId.add(node.asLong());
+            });
+            lstMemberId.add(userId);
+            try {
+                chatRoomService.createGroup(groupName, lstMemberId);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+            return ok(Json.toJson(lstMemberId));
+        }else{
+            return forbidden(Json.toJson("error"));
         }
-        return ok(Json.toJson(lstMemberId));
-    }
-
-    /**
-     * Gets the user.
-     *
-     * @return the user
-     */
-    public Member getUser() {
-        return user;
-    }
-
-    /**
-     * Sets the user.
-     *
-     * @param user the new user
-     */
-    public void setUser(Member user) {
-        this.user = user;
     }
 
     /**
@@ -313,7 +318,7 @@ public class Application extends Controller {
         try {
             URI url = new URI(origin);
             return url.getHost().equals("localhost")
-                    && (url.getPort() == 9090 || url.getPort() == 19001);
+                   && (url.getPort() == 9090 || url.getPort() == 19001);
         } catch (Exception e ) {
             return false;
         }

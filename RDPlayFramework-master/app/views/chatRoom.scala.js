@@ -3,11 +3,11 @@ var $messages = $("#messages");
 var $send = $("#send");
 var  $message = $("#message");
 var  $myFile = $("#myFile");
-var connection = new WebSocket("@url");
+var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
+var connection = new WS("@url");
 $send.prop("disabled", true);
-var isFlag = 0;
-var send = function () {
-    var text = $message.val();
+var send = function (name) {
+    var text = name + $message.val();
     $message.val("");
     connection.send(text);
 };
@@ -24,8 +24,7 @@ connection.onopen = function () {
     $message.keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13'){
-            send();
-            isFlag = 0;
+            send('@name :');
         }
     });
     $send.click(function(event){
@@ -44,7 +43,6 @@ connection.onopen = function () {
     	    type: 'POST',
     	    success: function(data){
     	    	sendFile();
-    	    	isFlag = 1;
     	    },
     	    error:function(e){
             	console.log(e);
@@ -56,12 +54,15 @@ connection.onerror = function (error) {
     console.log('WebSocket Error ', error);
 };
 connection.onmessage = function (event) {
-    var data = event.data.toString();
-    if(data != "") {
-    	if(data.indexOf("C:") != -1) {
-            $messages.append($("<a href='/file/" + data.substr(12, 100) + "'><li style='font-size: 1em; color: #aad4ff'>" + "@name" + " : " + data.substr(12, 100) + "</li></a>"))
-        } else {
-            $messages.append($("<li style='font-size: 1em; color: #000000'>" + "@name" + " : " + data + "</li>"))
-        }
-    }
+	if(connection.url == '@url') {
+		console.log(event.currentTarget);
+		var data = event.data.toString();
+	    if(data != "") {
+	    	if(data.indexOf("C:") != -1) {
+	            $messages.append($("<a href='/file/" + data.substr(12, 100) + "'><li style='font-size: 1em; color: #aad4ff'>" + data.substr(12, 100) + "</li></a>"))
+	        } else {
+	            $messages.append($("<li style='font-size: 1em; color: #000000'>" + data + "</li>"))
+	        }
+	    }
+	}
 }

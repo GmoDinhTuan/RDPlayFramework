@@ -5,6 +5,7 @@
 # An example controller showing a sample home page
 +nocsrf
 GET     /login                              controllers.Application.login()
+GET     /logout                              controllers.Application.logout()
 +nocsrf
 POST    /login                              controllers.Application.authenticate()
 GET     /index/:username                    controllers.Application.index(username: String)

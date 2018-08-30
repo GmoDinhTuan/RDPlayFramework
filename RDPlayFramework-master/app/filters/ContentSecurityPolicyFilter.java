@@ -10,23 +10,6 @@ import play.mvc.Result;
 
 public class ContentSecurityPolicyFilter extends EssentialFilter {
 
-    /** The action. */
-    private String roomName;
-
-    /**
-     * @return the roomName
-     */
-    public String getRoomName() {
-        return roomName;
-    }
-
-    /**
-     * @param roomName the roomName to set
-     */
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
-    }
-
     @Override
     public EssentialAction apply(EssentialAction next) {
         return EssentialAction.of((Http.RequestHeader requestHeader) -> {

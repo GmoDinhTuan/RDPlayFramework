@@ -1,7 +1,6 @@
 @import entities.Member
 @import entities.Groups
-@import entities.MembersGroup
-@(classes: List[Member], lstMemberInGroup: List[Member], group: List[Groups], memgroup: List[MembersGroup], des: String, nameGroup: String, groupId: Long, url: String, name: String) @main("ChatRoom") {
+@(classes: List[Member], lstMemberInGroup: List[Member], group: List[Groups], des: String, nameGroup: String, groupId: Long, url: String, name: String) @main("ChatRoom") {
 <div class="content-chat">
     <div class="list-member">
         <div class="header-list-member">
@@ -22,7 +21,7 @@
         <div class="name-room-chat">@nameGroup
         <div style="float:right;" id="leaveGroupDiv">
         @if(groupId != null){
-        	<a href="javascript:void(0);" id="leaveGroup" onclick="return Member.leaveGroup(@groupId+);">Rời nhóm</a>
+        	<a href="javascript:void(0);" id="leaveGroup" onclick="return Member.leaveGroup(@groupId);">Rời nhóm</a>
         }
 		</div>
         </div>
@@ -121,11 +120,11 @@ $(function() {
             onOpen : function(){
             },
             onClose : function(){
+            	Member.searchMember();
             }
         });
     });
     $('#addGroup').dialog('close');
-    Member.searchMember();
 
     $('#leaveGroup').click(function(){
     	Member.leaveGroup(id);

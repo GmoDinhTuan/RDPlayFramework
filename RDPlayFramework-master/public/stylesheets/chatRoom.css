@@ -66,7 +66,8 @@
 
 .box-chat {
     width: 100%;
-    min-height: 400px;
+    height: 400px;
+    overflow: scroll;
 }
 
 .new-message {

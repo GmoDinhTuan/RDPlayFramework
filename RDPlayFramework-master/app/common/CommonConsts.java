@@ -33,6 +33,9 @@ public class CommonConsts {
     /** The Constant VALUE_STATUS_ONE. */
     public static final String VALUE_STATUS_ONE = "1";
 
+    /** The Constant STATUS. */
+    public static final String STATUS = "status";
+
     /** The Constant PARAM_GROUP. */
     public static final String PARAM_GROUP = "group";
 

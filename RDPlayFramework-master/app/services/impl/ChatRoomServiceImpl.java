@@ -45,8 +45,8 @@ public class ChatRoomServiceImpl implements ChatRoomService{
      * @see services.ChatRoomService#findUser(java.lang.String, java.lang.String)
      */
     @Override
-    public List<Member> findUser() throws Exception {
-        List<Member> user = chatRoomReponsitory.findUser();
+    public List<Member> findUser(Long id) throws Exception {
+        List<Member> user = chatRoomReponsitory.findUser(id);
         return user;
     }
 

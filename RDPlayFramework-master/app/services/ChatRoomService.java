@@ -9,6 +9,7 @@ import entities.Member;
 import entities.MembersGroup;
 import services.impl.ChatRoomServiceImpl;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface ChatRoomService.
  */
@@ -28,14 +29,16 @@ public interface ChatRoomService {
     /**
      * Find user.
      *
+     * @param id the id
      * @return the list
      * @throws Exception the exception
      */
-    List<Member> findUser() throws Exception;
+    List<Member> findUser(Long id) throws Exception;
 
     /**
      * Find all group.
      *
+     * @param id the id
      * @return the list
      * @throws Exception the exception
      */

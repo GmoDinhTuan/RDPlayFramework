@@ -30,10 +30,11 @@ public interface ChatRoomReponsitory {
     /**
      * Find user.
      *
+     * @param id the id
      * @return the list
      * @throws Exception the exception
      */
-    List<Member> findUser() throws Exception;
+    List<Member> findUser(Long id) throws Exception;
 
     /**
      * Find all group.
